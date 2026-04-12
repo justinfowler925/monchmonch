@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { C, DEFAULT } from "./constants.js";
 import LaunchTab from "./tabs/LaunchTab.jsx";
 import UnitEconTab from "./tabs/UnitEconTab.jsx";
@@ -21,7 +21,32 @@ export default function MonchMonchCalculator() {
     { label: "Guide", icon: "\u2753" },
   ];
 
+  const fileRef = useRef(null);
   const reset = () => setState({ ...DEFAULT });
+
+  const exportScenario = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `monchmonch-scenario-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importScenario = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const loaded = JSON.parse(ev.target.result);
+        setState({ ...DEFAULT, ...loaded });
+      } catch { /* ignore malformed files */ }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
 
   return (
     <div style={{
@@ -48,16 +73,29 @@ export default function MonchMonchCalculator() {
               Interactive Operations & Revenue Calculator — v3.0
             </p>
           </div>
-          <button onClick={reset} style={{
-            padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.border}`,
-            background: "transparent", color: C.textMuted, fontSize: 12, fontWeight: 600,
-            cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
-          }}
-            onMouseOver={(e) => { e.target.style.borderColor = C.red; e.target.style.color = C.red; }}
-            onMouseOut={(e) => { e.target.style.borderColor = C.border; e.target.style.color = C.textMuted; }}
-          >
-            Reset to Defaults
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={exportScenario} style={{
+              padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.purple}40`,
+              background: C.purpleGlow, color: C.purple, fontSize: 12, fontWeight: 600,
+              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
+            }}>Save Scenario</button>
+            <button onClick={() => fileRef.current?.click()} style={{
+              padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.green}40`,
+              background: C.greenGlow, color: C.green, fontSize: 12, fontWeight: 600,
+              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
+            }}>Load Scenario</button>
+            <input ref={fileRef} type="file" accept=".json" onChange={importScenario} style={{ display: "none" }} />
+            <button onClick={reset} style={{
+              padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.border}`,
+              background: "transparent", color: C.textMuted, fontSize: 12, fontWeight: 600,
+              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
+            }}
+              onMouseOver={(e) => { e.target.style.borderColor = C.red; e.target.style.color = C.red; }}
+              onMouseOut={(e) => { e.target.style.borderColor = C.border; e.target.style.color = C.textMuted; }}
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
         <div style={{ display: "flex", gap: 2, borderBottom: `1px solid ${C.border}`, overflowX: "auto" }}>

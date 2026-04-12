@@ -36,7 +36,11 @@ export default function RevenueTab({ state, setState }) {
       </div>
 
       <div style={{ ...glassCard, marginBottom: 16 }}>
-        <h3 style={h3Style}>CHANNEL MIX</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <h3 style={{ ...h3Style, margin: 0 }}>CHANNEL MIX</h3>
+          <button onClick={() => setState((p) => ({ ...p, channels: [...p.channels, { name: "New Channel", active: true, pctAlloc: 0.10, barPrice: 2.00, elecPrice: 1.25, costPerUnit: 0.50, rampMonths: 0, maxMonthlyUnits: 5000 }] }))}
+            style={{ padding: "4px 12px", borderRadius: 6, border: `1px solid ${C.purple}40`, background: C.purpleGlow, color: C.purple, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Add Channel</button>
+        </div>
         {totalAlloc > 0 && Math.abs(totalAlloc - 1) > 0.01 && (
           <div style={{ padding: "8px 12px", borderRadius: 6, background: C.amberGlow, border: `1px solid ${C.amber}30`, marginBottom: 12, fontSize: 11, color: C.amber }}>
             Active channel allocations sum to {(totalAlloc * 100).toFixed(0)}% \u2014 should be 100%. Model normalizes automatically.
@@ -46,7 +50,7 @@ export default function RevenueTab({ state, setState }) {
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
               <tr>
-                {["Channel", "Active", "% Alloc", "Bar $/unit", "Elec $/unit", "Cost/unit", "Ramp (mo)", "Max/mo", "Y1 Rev"].map((h) => (
+                {["Channel", "Active", "% Alloc", "Bar $/unit", "Elec $/unit", "Cost/unit", "Ramp (mo)", "Max/mo", "Y1 Rev", ""].map((h) => (
                   <th key={h} style={{ ...labelStyle, padding: "8px 4px", textAlign: h === "Channel" ? "left" : "center", borderBottom: `1px solid ${C.border}` }}>{h}</th>
                 ))}
               </tr>
@@ -57,7 +61,10 @@ export default function RevenueTab({ state, setState }) {
                 const chRev = chDetail ? chDetail.rev : 0;
                 return (
                   <tr key={i} style={{ borderBottom: `1px solid ${C.border}22`, opacity: ch.active ? 1 : 0.5 }}>
-                    <td style={{ padding: "6px", color: C.text, fontWeight: 600 }}>{ch.name}</td>
+                    <td style={{ padding: "6px" }}>
+                      <input value={ch.name} onChange={(e) => updateChannel(i, "name", e.target.value)}
+                        style={{ ...inputStyle, width: 130, textAlign: "left", color: C.text, fontWeight: 600 }} />
+                    </td>
                     <td style={{ textAlign: "center", padding: "6px" }}>
                       <input type="checkbox" checked={ch.active}
                         onChange={(e) => updateChannel(i, "active", e.target.checked)}
@@ -94,6 +101,10 @@ export default function RevenueTab({ state, setState }) {
                         style={{ ...inputStyle, width: 60, fontSize: 11, textAlign: "center" }} />
                     </td>
                     <td style={{ textAlign: "center", padding: "6px", color: C.green, fontWeight: 700 }}>{fmt(chRev)}</td>
+                    <td style={{ padding: "6px" }}>
+                      <button onClick={() => setState((p) => ({ ...p, channels: p.channels.filter((_, j) => j !== i) }))}
+                        style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"\u2715"}</button>
+                    </td>
                   </tr>
                 );
               })}

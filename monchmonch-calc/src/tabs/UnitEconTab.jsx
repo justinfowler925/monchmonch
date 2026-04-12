@@ -258,11 +258,15 @@ export default function UnitEconTab({ state, setState }) {
       </div>
 
       <div style={{ ...glassCard, marginTop: 16 }}>
-        <h3 style={h3Style}>LABOR & STAFFING</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <h3 style={{ ...h3Style, margin: 0 }}>LABOR & STAFFING</h3>
+          <button onClick={() => setState((p) => ({ ...p, laborRoles: [...p.laborRoles, { role: "New Role", headcount: 1, rate: 20, hoursPerRun: 8, isVariable: true }] }))}
+            style={{ padding: "4px 12px", borderRadius: 6, border: `1px solid ${C.violet}40`, background: C.violetGlow, color: C.violet, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Add</button>
+        </div>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
           <thead>
             <tr>
-              {["Role", "Headcount", "$/hr", "Hrs/Run", "Variable?", "Cost/Run"].map((h) => (
+              {["Role", "Headcount", "$/hr", "Hrs/Run", "Variable?", "Cost/Run", ""].map((h) => (
                 <th key={h} style={{ ...labelStyle, padding: "6px 4px", textAlign: h === "Role" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
               ))}
             </tr>
@@ -270,7 +274,10 @@ export default function UnitEconTab({ state, setState }) {
           <tbody>
             {state.laborRoles.map((r, i) => (
               <tr key={i} style={{ borderBottom: `1px solid ${C.border}22` }}>
-                <td style={{ padding: "4px", color: C.text }}>{r.role}</td>
+                <td style={{ padding: "4px" }}>
+                  <input value={r.role} onChange={(e) => setState((p) => { const a = [...p.laborRoles]; a[i] = { ...a[i], role: e.target.value }; return { ...p, laborRoles: a }; })}
+                    style={{ ...inputStyle, width: 140, textAlign: "left", color: C.text }} />
+                </td>
                 <td style={{ textAlign: "right", padding: "4px" }}>
                   <input type="number" value={r.headcount} step={1} min={0}
                     onChange={(e) => setState((p) => { const a = [...p.laborRoles]; a[i] = { ...a[i], headcount: parseInt(e.target.value) || 0 }; return { ...p, laborRoles: a }; })}
@@ -286,18 +293,24 @@ export default function UnitEconTab({ state, setState }) {
                     onChange={(e) => setState((p) => { const a = [...p.laborRoles]; a[i] = { ...a[i], hoursPerRun: parseFloat(e.target.value) || 0 }; return { ...p, laborRoles: a }; })}
                     style={{ ...inputStyle, width: 45, fontSize: 11 }} />
                 </td>
-                <td style={{ textAlign: "right", padding: "4px", color: r.isVariable ? C.green : C.amber, fontSize: 11 }}>
-                  {r.isVariable ? "Variable" : "Fixed"}
+                <td style={{ textAlign: "center", padding: "4px" }}>
+                  <input type="checkbox" checked={r.isVariable}
+                    onChange={(e) => setState((p) => { const a = [...p.laborRoles]; a[i] = { ...a[i], isVariable: e.target.checked }; return { ...p, laborRoles: a }; })}
+                    style={{ accentColor: C.green }} />
                 </td>
                 <td style={{ textAlign: "right", padding: "4px", color: C.violet, fontWeight: 700 }}>
                   {fmt(r.headcount * r.rate * r.hoursPerRun)}
+                </td>
+                <td style={{ padding: "4px" }}>
+                  <button onClick={() => setState((p) => ({ ...p, laborRoles: p.laborRoles.filter((_, j) => j !== i) }))}
+                    style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"\u2715"}</button>
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr style={{ borderTop: `2px solid ${C.violet}44` }}>
-              <td colSpan={5} style={{ padding: "8px 4px", color: C.text, fontWeight: 700 }}>TOTAL LABOR / RUN</td>
+              <td colSpan={6} style={{ padding: "8px 4px", color: C.text, fontWeight: 700 }}>TOTAL LABOR / RUN</td>
               <td style={{ textAlign: "right", padding: "8px 4px", color: C.violet, fontWeight: 800 }}>
                 {fmt(state.laborRoles.reduce((s, r) => s + r.headcount * r.rate * r.hoursPerRun, 0))}
               </td>
