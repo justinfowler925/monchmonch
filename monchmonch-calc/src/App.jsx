@@ -6,6 +6,7 @@ import RevenueTab from "./tabs/RevenueTab.jsx";
 import ProductionTab from "./tabs/ProductionTab.jsx";
 import PLTab from "./tabs/PLTab.jsx";
 import FinancingTab from "./tabs/FinancingTab.jsx";
+import GuideTab from "./tabs/GuideTab.jsx";
 
 export default function MonchMonchCalculator() {
   const [state, setState] = useState({ ...DEFAULT });
@@ -17,6 +18,7 @@ export default function MonchMonchCalculator() {
     { label: "Production & Inventory", icon: "\uD83C\uDFED" },
     { label: "5-Year P&L", icon: "\uD83D\uDCCA" },
     { label: "Financing & Capital", icon: "\uD83C\uDFE6" },
+    { label: "Guide", icon: "\u2753" },
   ];
 
   const reset = () => setState({ ...DEFAULT });
@@ -81,6 +83,7 @@ export default function MonchMonchCalculator() {
         {tab === 3 && <ProductionTab state={state} setState={setState} />}
         {tab === 4 && <PLTab state={state} />}
         {tab === 5 && <FinancingTab state={state} setState={setState} />}
+        {tab === 6 && <GuideTab />}
       </div>
 
       <div style={{ textAlign: "center", padding: "20px 32px 0", borderTop: `1px solid ${C.border}` }}>
