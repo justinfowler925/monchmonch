@@ -85,6 +85,9 @@ export const DEFAULT = {
 
   growthY2: 1.5, growthY3: 1.0, growthY4: 0.5, growthY5: 0.3,
   gna: 3000, marketingPct: 0.10,
+  overheadMult: [1.0, 1.0, 1.5, 1.5, 1.5],
+  spoilageCostMult: 3,
+  carryingCostRate: 0.10,
 
   minBarRun: 5000, minElecRun: 10000,
 
@@ -104,6 +107,7 @@ export const DEFAULT = {
     { name: "Kosher Certification", cost: 10000, month: -3, notes: "Factory certification" },
     { name: "Clean Room Buildout", cost: 150000, month: -6, notes: "GMP clean rooms" },
     { name: "Factory Inventory Min", cost: 15000, month: -1, notes: "5 tons minimum" },
+    { name: "Bar Recipe Dev (3 flavors)", cost: 17500, month: -4, notes: "3 flavor formulations" },
     { name: "Branding & Design", cost: 25000, month: -4, notes: "Package design, brand identity" },
     { name: "Legal & Regulatory", cost: 15000, month: -5, notes: "FDA, labeling compliance" },
   ],
