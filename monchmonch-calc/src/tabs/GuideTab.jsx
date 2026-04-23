@@ -24,6 +24,53 @@ const sections = [
     ],
   },
   {
+    id: "strategic-cost-analysis",
+    icon: "🎯",
+    title: "Strategic Cost Analysis — Path to $0.10 Fiber (Apr 2026)",
+    content: [
+      {
+        type: "callout",
+        color: C.red,
+        body: "OPERATIONAL DIRECTIVE: Current cost to produce a single serving of Monch fiber is ~$0.37. Target is $0.10. Retail price can only be ~5x cost. Unless fiber COGS drops toward $0.10/serving (and protein moves from $0.37 → $0.15–0.20 via pea isolate), the bar cannot sustain $3.49 retail under the 5x rule. This is the defining unit-economics decision for the business."
+      },
+      { type: "heading", body: "Cost Baseline (April 2026)" },
+      {
+        type: "text",
+        body: "Monch proprietary fiber: $0.37/serving at current small-batch production. Whey protein isolate (WPI) at 15g/serving: $0.36–0.39 at 2026 spot prices ($24–26/kg, $11/lb). Commodity prebiotic fiber (inulin, soluble corn fiber) at plant scale: $0.02–0.03/serving — this is the competitive floor, not the target (Monch's 3.3x bioavailability is the premium). Full bar COGS today: $1.59 at 25K run, $1.35 at 100K run. The 5x retail:COGS rule implies bar COGS must land at or below $0.70 to sustain a $3.49 retail price."
+      },
+      { type: "heading", body: "Fiber Cost-Reduction Levers" },
+      {
+        type: "text",
+        body: "Four paths to reduce Monch fiber cost: (1) Reformulate as 50/50 blend with commodity soluble corn fiber (ADM Fibersol-2 or Tate & Lyle Promitor): $0.37 → ~$0.20/serving, but dilutes the bioavailability story. (2) In-house commercial scale-up at 100+ MT/yr: $0.37 → ~$0.18, requires $2–5M capex. (3) Strategic co-development with a major ingredient house (Cargill / Tate & Lyle / ADM / IFF / DSM-Firmenich) at 500+ MT/yr: $0.37 → $0.09–$0.14. (4) Combined strategy (co-dev + selective blending + dual-protein formulation): $0.06–$0.10. Only paths 3 and 4 hit the target."
+      },
+      { type: "heading", body: "Strategic Co-Development Partners" },
+      {
+        type: "text",
+        body: "Cargill — Oliggo-Fiber inulin platform, scale anchor, Food System Design co-dev model with strong IP protection. Tate & Lyle — Promitor Soluble Corn Fiber, historically the most flexible on co-dev terms. ADM — Fibersol-2 digestion-resistant maltodextrin, strong resistant-starch expertise. IFF (ex-DuPont Nutrition) — premium formulation IP, nimble innovation group. DSM-Firmenich — premium nutrition positioning, willing to pay for differentiated IP. Typical deal shape: 500 MT/yr MOQ (~50M servings annually), 5–7 year term, category exclusivity or equity concession in exchange for aggressive pricing."
+      },
+      {
+        type: "callout",
+        color: C.green,
+        body: "Recommended path: 3-way parallel RFP (Cargill + Tate & Lyle + IFF). Single-vendor conversations surrender 20–35% of the eventual price compression — strategics reveal their real pricing only when they smell a competitor on the same deal."
+      },
+      { type: "heading", body: "Protein Cost Hedge" },
+      {
+        type: "text",
+        body: "WPI raw hit $11/lb ($24/kg) in late 2025 — up 50–110% since 2024 — driven by constrained global membrane filtration and spray-dry capacity. New Glanbia, Tirlán, and Idaho Milk Products capacity doesn't reach the market until late 2026–2027, so protein cost may tighten further near-term. Pea protein isolate (80% grade) trades at $8–12/kg — a 60–70% cost cut versus whey. A dual-protein formulation (pea as primary base, whey as minor for amino profile) cuts protein-per-serving from $0.37 to $0.15–$0.20 and compounds the fiber savings toward the 5x retail rule."
+      },
+      { type: "heading", body: "Product Line Decision (April 2026)" },
+      {
+        type: "text",
+        body: "Bar = Flagship, Phase 1, Year 1 launch. Already formulation-complete; factory capacity in place at 166K servings/month; Flavor Insights (creators of Muscle Milk) is the GTM/production partner. Drink = Phase 2, H1 Year 2 (committed timeline, not indefinite). Drink has structurally better 5x economics and is the portfolio's margin-expansion story. Electrolyte packets = deprecated as a product line. For packet-inactive modeling in this calculator: set elecMSRP to 0 or zero out all packet-channel allocations on the Revenue & Channel tab."
+      },
+      { type: "heading", body: "Source References (Apr 2026)" },
+      {
+        type: "text",
+        body: "WPI market pricing: Macau Nutrition 2026 price analysis; Wisconsin Whey food-grade specs; Vivion bulk distribution; CLAL global WPC price index. Pea protein market: Green Circle Capital protein pricing review; PURIS; Jedwards International 80% bulk; Global Resources Direct. Cargill co-development model: IFT Food Technology magazine; Cargill Food & Beverage NA portfolio; Vitafoods Europe 2026 active nutrition concepts; Cargill + ENOUGH partnership case study. Contract manufacturing benchmarks: FinancialModelsLab custom protein bar analysis; CopackConnect U.S. nutrition bar market trends; Element Bars scale economics (25K–1M bars/month capacity range)."
+      },
+    ],
+  },
+  {
     id: "launch",
     icon: "🚀",
     title: "Tab 1: Launch & Startup",

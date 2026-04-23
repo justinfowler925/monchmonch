@@ -130,4 +130,37 @@ export const DEFAULT = {
 
   entryEquity: 1000000, entryVal: 5000000, holdPeriod: 5,
   exitMultLow: 6, exitMultBase: 8, exitMultHigh: 12,
+
+  monchFiberCostScenarios: {
+    current: 0.37,
+    reformulateBlend: 0.20,
+    inhouseScale: 0.18,
+    strategicCoDev: 0.11,
+    combined: 0.08,
+    target: 0.10,
+    competitiveFloor: 0.025,
+  },
+  proteinCostBenchmarks2026: {
+    wheyIsolatePerKg: 25,
+    wheyIsolatePer15gServing: 0.375,
+    peaIsolatePerKg: 10,
+    peaIsolatePer15gServing: 0.15,
+    dualBlendPer15gServing: 0.18,
+    note: "WPI up 50-110% since 2024; new capacity late 2026-27 (Glanbia, Tirlan, Idaho Milk Products). Pea isolate 80% at $8-12/kg bulk.",
+  },
+  productLineDecisionApr2026: {
+    flagship: "Protein + Fiber Bar (Phase 1 - Year 1)",
+    phase2: "Functional Drink (H1 Year 2)",
+    deprecated: "Electrolyte Packets (removed from GTM)",
+    retailCogsMultiple: 5,
+    barMaxCogsAt349Retail: 0.70,
+    productionPartner: "Flavor Insights (creators of Muscle Milk)",
+  },
+  coDevelopmentCandidates: [
+    { name: "Cargill", platform: "Oliggo-Fiber inulin", role: "Scale anchor; Food System Design co-dev model" },
+    { name: "Tate & Lyle", platform: "Promitor Soluble Corn Fiber", role: "Most flexible co-dev terms historically" },
+    { name: "ADM", platform: "Fibersol-2 RS maltodextrin", role: "Digestion-resistant expertise" },
+    { name: "IFF", platform: "ex-DuPont Nutrition portfolio", role: "Premium formulation IP, nimble" },
+    { name: "DSM-Firmenich", platform: "Premium nutrition", role: "Willing to pay for differentiated IP" },
+  ],
 };
