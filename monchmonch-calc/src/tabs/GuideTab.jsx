@@ -31,12 +31,12 @@ const sections = [
       {
         type: "callout",
         color: C.red,
-        body: "OPERATIONAL DIRECTIVE: Current cost to produce a single serving of Monch fiber is ~$0.37. Target is $0.10. Retail price can only be ~5x cost. Unless fiber COGS drops toward $0.10/serving (and protein moves from $0.37 → $0.15–0.20 via pea isolate), the bar cannot sustain $3.49 retail under the 5x rule. This is the defining unit-economics decision for the business."
+        body: "OPERATIONAL DIRECTIVE: Current cost to produce a single serving of Monch fiber is ~$0.37. Target is $0.10. This is the SOLE strategic cost-reduction target. Protein cost is accepted as market-given context, not a lever. Unless Monch fiber drops to ~$0.10/serving, both the bar/packet 5x retail economics AND the B2B ingredient licensing channel are blocked. This is the defining unit-economics decision for the business."
       },
       { type: "heading", body: "Cost Baseline (April 2026)" },
       {
         type: "text",
-        body: "Monch proprietary fiber: $0.37/serving at current small-batch production. Whey protein isolate (WPI) at 15g/serving: $0.36–0.39 at 2026 spot prices ($24–26/kg, $11/lb). Commodity prebiotic fiber (inulin, soluble corn fiber) at plant scale: $0.02–0.03/serving — this is the competitive floor, not the target (Monch's 3.3x bioavailability is the premium). Full bar COGS today: $1.59 at 25K run, $1.35 at 100K run. The 5x retail:COGS rule implies bar COGS must land at or below $0.70 to sustain a $3.49 retail price."
+        body: "Monch proprietary fiber: $0.37/serving at current small-batch production — this is the target for reduction. Commodity prebiotic fiber (inulin, soluble corn fiber) at plant scale: $0.02–0.03/serving — this is the competitive floor, NOT the target (Monch's 3.3x bioavailability justifies a premium over commodity). Full bar COGS today: $1.59 at 25K run, $1.35 at 100K run. The 5x retail:COGS rule implies bar COGS must land at or below $0.70 to sustain a $3.49 retail price. Protein cost at 15g WPI is $0.36–0.39/serving (2026 spot) — included here as verification context only; it is not a reduction lever."
       },
       { type: "heading", body: "Fiber Cost-Reduction Levers" },
       {
@@ -53,15 +53,15 @@ const sections = [
         color: C.green,
         body: "Recommended path: 3-way parallel RFP (Cargill + Tate & Lyle + IFF). Single-vendor conversations surrender 20–35% of the eventual price compression — strategics reveal their real pricing only when they smell a competitor on the same deal."
       },
-      { type: "heading", body: "Protein Cost Hedge" },
+      { type: "heading", body: "Why $0.10 Matters Beyond Internal COGS" },
       {
         type: "text",
-        body: "WPI raw hit $11/lb ($24/kg) in late 2025 — up 50–110% since 2024 — driven by constrained global membrane filtration and spray-dry capacity. New Glanbia, Tirlán, and Idaho Milk Products capacity doesn't reach the market until late 2026–2027, so protein cost may tighten further near-term. Pea protein isolate (80% grade) trades at $8–12/kg — a 60–70% cost cut versus whey. A dual-protein formulation (pea as primary base, whey as minor for amino profile) cuts protein-per-serving from $0.37 to $0.15–$0.20 and compounds the fiber savings toward the 5x retail rule."
+        body: "The $0.10 target is not only about bar/packet internal unit economics. In food-industry ingredient sales, supplier price is conventionally ~5x production cost. At Monch's current $0.37/serving cost, supplier pricing would land at $1.85/serving — no CPG brand buys fiber at that price. At $0.10 production cost, supplier price becomes $0.50/serving — still ~20x commodity fiber, but defensible because of the 3.3x bioavailability premium. That threshold is what unlocks the B2B ingredient licensing channel flagged as the 'Universal Incorporation' moat: Monch licensed as a functional fiber into other CPG brands' bars, drinks, baked goods, and powders — a second revenue line beyond the Matchbox 7 consumer brand."
       },
       { type: "heading", body: "Product Line Decision (April 2026)" },
       {
         type: "text",
-        body: "Bar = Flagship, Phase 1, Year 1 launch. Already formulation-complete; factory capacity in place at 166K servings/month; Flavor Insights (creators of Muscle Milk) is the GTM/production partner. Drink = Phase 2, H1 Year 2 (committed timeline, not indefinite). Drink has structurally better 5x economics and is the portfolio's margin-expansion story. Electrolyte packets = deprecated as a product line. For packet-inactive modeling in this calculator: set elecMSRP to 0 or zero out all packet-channel allocations on the Revenue & Channel tab."
+        body: "Year 1 flagship system: Bar + Electrolyte Packet (bundled). Bar drives nutrition/satiety; packet drives hydration + GI support (the #2 GLP-1 side effect) and serves as the attach-rate driver. Packet is thin-margin by design (26% standalone DTC GM) — the business case lives at the bundle level, not the SKU level. Flavor Insights (creators of Muscle Milk) is the GTM/production partner. H1 Year 2: Functional Drink launches as the margin-expansion SKU — structurally stronger 5x economics (water base, cheaper packaging) than the bar. All three products carry Monch fiber; all three benefit directly from the $0.10 fiber-cost target. Factory capacity: 166K servings/month across the product mix."
       },
       { type: "heading", body: "Source References (Apr 2026)" },
       {
