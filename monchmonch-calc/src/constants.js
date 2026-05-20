@@ -123,14 +123,14 @@ export const DEFAULT = {
   ],
   fundingSources: [
     { name: "Founder Equity", amount: 200000, type: "equity" },
-    { name: "Seed Round (current ask)", amount: 5000000, type: "equity" },
-    { name: "Series A (Y2 milestone)", amount: 10000000, type: "equity" },
+    { name: "Seed Round (current ask)", amount: 4000000, type: "equity" },
+    { name: "Series A (Y2 milestone)", amount: 9000000, type: "equity" },
   ],
 
   rmLeadWeeks: 4, coManLeadWeeks: 3,
   rmPaymentTerms: 30, coManPaymentTerms: 30, coManDeposit: 0.25,
 
-  startingCash: 200000, equityRaised: 15000000,
+  startingCash: 200000, equityRaised: 13000000,
   debtAmount: 0, debtRate: 0.08, debtTerm: 36,
 
   commitments: [
