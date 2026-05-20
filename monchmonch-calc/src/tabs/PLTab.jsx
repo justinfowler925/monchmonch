@@ -36,16 +36,20 @@ export default function PLTab({ state }) {
             </thead>
             <tbody>
               {[
+                { label: "Bars + Electrolytes Revenue", field: "barsRev", color: C.textMuted, bold: false },
+                { label: "Ingredient Licensing Revenue (B2B)", field: "licensingRev", color: C.cyan, bold: false },
                 { label: "TOTAL NET REVENUE", field: "netRev", color: C.violet, bold: true },
                 { label: "", field: null },
-                { label: "Total COGS", field: "totalCOGS", color: C.red, bold: false },
+                { label: "Total COGS (bars + licensing)", field: "totalCOGS", color: C.red, bold: false },
                 { label: "GROSS PROFIT", field: "grossProfit", color: C.green, bold: true },
                 { label: "Gross Margin %", field: "grossMargin", color: C.green, bold: false, pct: true },
                 { label: "", field: null },
-                { label: "Channel Costs", field: "channelCosts", color: C.textMuted, bold: false },
+                { label: "Channel Costs (bars fulfillment + trade)", field: "channelCosts", color: C.textMuted, bold: false },
                 { label: "Fixed Overhead", field: "fixedOH", color: C.textMuted, bold: false },
                 { label: "Marketing", field: "marketing", color: C.textMuted, bold: false },
                 { label: "Payroll", field: "payroll", color: C.textMuted, bold: false },
+                { label: "BD / Sales (licensing channel)", field: "bdSales", color: C.textMuted, bold: false },
+                { label: "Clinical & IP", field: "clinical", color: C.textMuted, bold: false },
                 { label: "G&A", field: "gna", color: C.textMuted, bold: false },
                 { label: "Carrying Costs", field: "carryingCost", color: C.textMuted, bold: false },
                 { label: "Spoilage", field: "spoilageCost", color: C.textMuted, bold: false },

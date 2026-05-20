@@ -86,15 +86,33 @@ export const DEFAULT = {
 
   barSeason: [1.15, 1.1, 1.05, 0.95, 0.9, 0.95, 1.0, 1.0, 0.95, 0.95, 1.0, 1.0],
   elecSeason: [0.85, 0.85, 0.9, 1.0, 1.1, 1.2, 1.25, 1.2, 1.05, 0.9, 0.85, 0.85],
-  barDemand: [5000, 7000, 9000, 11000, 12000, 13000, 13500, 14000, 14500, 15000, 15500, 16500],
-  elecDemand: [4000, 5500, 7000, 8500, 9500, 10500, 11000, 11500, 12000, 12500, 13000, 13500],
+  barDemand: [2000, 3000, 4000, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000],
+  elecDemand: [1500, 2500, 3500, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500],
 
-  growthY2: 2.57, growthY3: 1.40, growthY4: 1.50, growthY5: 1.20,
-  gna: 15000, marketingPct: 0.10, marketingAnnual: 300000,
-  marketingByYear: [600000, 1000000, 1750000, 2400000, 3500000],
-  payrollY1: 200000, payrollAnnualIncrease: 100000, payrollStartMonth: 4,
-  payrollByYear: [571000, 972000, 1590000, 2370000, 3120000],
-  overheadMult: [1.0, 1.5, 2.5, 3.5, 4.5],
+  growthY2: 1.50, growthY3: 1.00, growthY4: 0.67, growthY5: 0.60,
+  gna: 6000, marketingPct: 0.10, marketingAnnual: 150000,
+  marketingByYear: [150000, 250000, 400000, 600000, 800000],
+  payrollY1: 200000, payrollAnnualIncrease: 200000, payrollStartMonth: 1,
+  payrollByYear: [200000, 400000, 750000, 1250000, 1800000],
+  overheadMult: [1.0, 1.5, 2.0, 2.5, 3.0],
+
+  // INGREDIENT LICENSING (the actual business; bars = proof-of-concept marketing vehicle)
+  // Monch fiber sold B2B to CPG brands building GLP-1 companion products at ~$0.50/serving
+  // (5x markup on target $0.10 production cost, 20x commodity fiber, justified by 3.3x bioavailability)
+  // Realistic deal pipeline: Y1 0 deals (still building proof), Y2 1 pilot half-year, Y3 2-3 deals,
+  // Y4 5 deals, Y5 8-10 deals. 12-24mo CPG sales cycles, so deals seeded Y1-Y2 close Y2-Y3.
+  licensingByYear: [0, 500000, 3000000, 8000000, 18000000],
+  licensingCogsPct: 0.25, // 75% gross margin on ingredient licensing (industry standard for specialty CPG ingredients)
+
+  // BD/SALES (ingredient channel — separate from consumer marketing)
+  // Y1: founder-led outreach (no dedicated BD spend). Y2: hire 1 BD lead + commission pool.
+  // Y3-Y5: scale BD team as deal pipeline matures (typical 5-10% of licensing rev).
+  bdSalesByYear: [0, 150000, 400000, 800000, 1500000],
+
+  // CLINICAL & IP (the deferred-but-load-bearing investment that unlocks licensing)
+  // Y1: first study setup (glycemic, n=50 pilot). Y2: full studies (glycemic + GI, n=200).
+  // Y3+: maintenance + IP defense. Without clinical proof, no CPG buyer touches the ingredient.
+  clinicalByYear: [100000, 200000, 100000, 50000, 50000],
   spoilageCostMult: 3,
   carryingCostRate: 0.10,
 
@@ -122,15 +140,14 @@ export const DEFAULT = {
     { name: "Legal & Regulatory", cost: 15000, month: -5, notes: "FDA, labeling compliance" },
   ],
   fundingSources: [
-    { name: "Founder Equity", amount: 200000, type: "equity" },
-    { name: "Seed Round (current ask)", amount: 4000000, type: "equity" },
-    { name: "Series A (Y2 milestone)", amount: 9000000, type: "equity" },
+    { name: "Founder Equity (sweat + cash)", amount: 100000, type: "equity" },
+    { name: "Seed Round (current ask)", amount: 2500000, type: "equity" },
   ],
 
   rmLeadWeeks: 4, coManLeadWeeks: 3,
   rmPaymentTerms: 30, coManPaymentTerms: 30, coManDeposit: 0.25,
 
-  startingCash: 200000, equityRaised: 13000000,
+  startingCash: 100000, equityRaised: 2500000,
   debtAmount: 0, debtRate: 0.08, debtTerm: 36,
 
   commitments: [

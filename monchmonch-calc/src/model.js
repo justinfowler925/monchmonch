@@ -178,9 +178,28 @@ export function runModel(s) {
     const commitmentCost = commitmentMonthly * 12;
     const debtService = debtMonthlyPayment * 12;
 
-    const totalOpex = channelCosts + fixedOH + marketing + payroll + gna + carryingCost + spoilageCost + commitmentCost + debtService;
-    const ebitda = grossProfit - totalOpex;
-    const ebitdaMargin = netRev > 0 ? ebitda / netRev : 0;
+    // INGREDIENT LICENSING (separate revenue stream, no channel costs, separate COGS)
+    const licensingRev = (s.licensingByYear && s.licensingByYear[y] != null) ? s.licensingByYear[y] : 0;
+    const licensingCogs = licensingRev * (s.licensingCogsPct != null ? s.licensingCogsPct : 0.25);
+    const licensingGP = licensingRev - licensingCogs;
+    const bdSales = (s.bdSalesByYear && s.bdSalesByYear[y] != null) ? s.bdSalesByYear[y] : 0;
+    const clinical = (s.clinicalByYear && s.clinicalByYear[y] != null) ? s.clinicalByYear[y] : 0;
+
+    // Bars-only breakdown (preserved separately for transparency)
+    const barsRev = netRev;
+    const barsCogs = totalCOGS;
+    const barsGP = grossProfit;
+    const barsGM = grossMargin;
+
+    // Combined totals (what investors care about; PLTab renders these as "TOTAL")
+    const combinedRev = netRev + licensingRev;
+    const combinedCogs = totalCOGS + licensingCogs;
+    const combinedGP = grossProfit + licensingGP;
+    const combinedGM = combinedRev > 0 ? combinedGP / combinedRev : 0;
+
+    const totalOpex = channelCosts + fixedOH + marketing + payroll + bdSales + clinical + gna + carryingCost + spoilageCost + commitmentCost + debtService;
+    const ebitda = combinedGP - totalOpex;
+    const ebitdaMargin = combinedRev > 0 ? ebitda / combinedRev : 0;
 
     cashBalance += ebitda;
     const monthlyBurn = ebitda < 0 ? Math.abs(ebitda) / 12 : 0;
@@ -188,7 +207,15 @@ export function runModel(s) {
 
     years.push({
       year: y + 1, barUnits, elecUnits, totalUnits, tier, bCOGSUnit, eCOGSUnit,
-      netRev, totalCOGS, grossProfit, grossMargin,
+      // OVERRIDE: netRev/totalCOGS/grossProfit/grossMargin are now COMBINED (bars + licensing)
+      // so existing PLTab "TOTAL NET REVENUE" / "GROSS PROFIT" / "EBITDA" rows show combined business
+      netRev: combinedRev, totalCOGS: combinedCogs, grossProfit: combinedGP, grossMargin: combinedGM,
+      // Bars-only fields (for breakdown rows in PLTab)
+      barsRev, barsCogs, barsGP, barsGM,
+      // Licensing-only fields
+      licensingRev, licensingCogs, licensingGP,
+      // New OpEx lines
+      bdSales, clinical,
       channelCosts, fixedOH, marketing, payroll, gna, carryingCost, spoilageCost, commitmentCost, debtService,
       totalOpex, ebitda, ebitdaMargin, cashBalance, monthlyBurn, runwayMonths,
       channelDetail: chRev.channelDetail,
