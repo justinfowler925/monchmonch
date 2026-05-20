@@ -185,11 +185,15 @@ export default function LaunchTab({ state, setState }) {
       </div>
 
       <div style={{ ...glassCard, marginTop: 16 }}>
-        <h3 style={h3Style}>FIXED COMMITMENTS</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <h3 style={{ ...h3Style, margin: 0 }}>FIXED COMMITMENTS</h3>
+          <button onClick={() => setState((p) => ({ ...p, commitments: [...p.commitments, { name: "New Commitment", type: "other", monthlyCost: 0, termMonths: 12, notes: "" }] }))}
+            style={{ padding: "4px 12px", borderRadius: 6, border: `1px solid ${C.amber}40`, background: C.amberGlow, color: C.amber, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Add</button>
+        </div>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
           <thead>
             <tr>
-              {["Counterparty", "Type", "Monthly $", "Term (mo)", "Notes"].map((h) => (
+              {["Counterparty", "Type", "Monthly $", "Term (mo)", "Notes", ""].map((h) => (
                 <th key={h} style={{ ...labelStyle, padding: "6px 4px", textAlign: h === "Counterparty" || h === "Notes" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
               ))}
             </tr>
@@ -197,11 +201,32 @@ export default function LaunchTab({ state, setState }) {
           <tbody>
             {state.commitments.map((c, i) => (
               <tr key={i} style={{ borderBottom: `1px solid ${C.border}22` }}>
-                <td style={{ padding: "6px 4px", color: C.text }}>{c.name}</td>
-                <td style={{ padding: "6px 4px", textAlign: "right", color: C.textMuted }}>{c.type}</td>
-                <td style={{ padding: "6px 4px", textAlign: "right", color: C.amber, fontWeight: 600 }}>{fmt(c.monthlyCost)}</td>
-                <td style={{ padding: "6px 4px", textAlign: "right", color: C.textMuted }}>{c.termMonths}</td>
-                <td style={{ padding: "6px 4px", color: C.textDim, fontSize: 11 }}>{c.notes}</td>
+                <td style={{ padding: "4px" }}>
+                  <input value={c.name} onChange={(ev) => setState((p) => { const a = [...p.commitments]; a[i] = { ...a[i], name: ev.target.value }; return { ...p, commitments: a }; })}
+                    style={{ ...inputStyle, width: 120, textAlign: "left", color: C.text }} />
+                </td>
+                <td style={{ padding: "4px", textAlign: "right" }}>
+                  <select value={c.type} onChange={(ev) => setState((p) => { const a = [...p.commitments]; a[i] = { ...a[i], type: ev.target.value }; return { ...p, commitments: a }; })}
+                    style={{ ...inputStyle, width: 80, textAlign: "center", appearance: "auto" }}>
+                    {["production", "facility", "equipment", "marketing", "other"].map((t) => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </td>
+                <td style={{ padding: "4px", textAlign: "right" }}>
+                  <input type="number" value={c.monthlyCost} step={100} onChange={(ev) => setState((p) => { const a = [...p.commitments]; a[i] = { ...a[i], monthlyCost: parseFloat(ev.target.value) || 0 }; return { ...p, commitments: a }; })}
+                    style={{ ...inputStyle, width: 70 }} />
+                </td>
+                <td style={{ padding: "4px", textAlign: "right" }}>
+                  <input type="number" value={c.termMonths} step={6} onChange={(ev) => setState((p) => { const a = [...p.commitments]; a[i] = { ...a[i], termMonths: parseInt(ev.target.value) || 0 }; return { ...p, commitments: a }; })}
+                    style={{ ...inputStyle, width: 50 }} />
+                </td>
+                <td style={{ padding: "4px" }}>
+                  <input value={c.notes} onChange={(ev) => setState((p) => { const a = [...p.commitments]; a[i] = { ...a[i], notes: ev.target.value }; return { ...p, commitments: a }; })}
+                    style={{ ...inputStyle, width: 100, textAlign: "left", color: C.textMuted }} />
+                </td>
+                <td style={{ padding: "4px" }}>
+                  <button onClick={() => setState((p) => ({ ...p, commitments: p.commitments.filter((_, j) => j !== i) }))}
+                    style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"\u2715"}</button>
+                </td>
               </tr>
             ))}
           </tbody>

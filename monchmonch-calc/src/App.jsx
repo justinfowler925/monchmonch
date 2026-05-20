@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { C, DEFAULT } from "./constants.js";
 import LaunchTab from "./tabs/LaunchTab.jsx";
 import UnitEconTab from "./tabs/UnitEconTab.jsx";
@@ -8,9 +8,37 @@ import PLTab from "./tabs/PLTab.jsx";
 import FinancingTab from "./tabs/FinancingTab.jsx";
 import GuideTab from "./tabs/GuideTab.jsx";
 
+/** Persisted workspace (this browser only). Bump if stored shape changes incompatibly. */
+const PERSIST_KEY = "monchmonch-calc-workspace-v1";
+
+function readWorkspace() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(PERSIST_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function writeWorkspace(payload) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(PERSIST_KEY, JSON.stringify(payload));
+  } catch (e) {
+    console.warn("MonchMonch autosave failed (storage full or disabled)", e);
+  }
+}
+
+const initialWorkspace = readWorkspace();
+
 export default function MonchMonchCalculator() {
-  const [state, setState] = useState({ ...DEFAULT });
-  const [tab, setTab] = useState(0);
+  const [state, setState] = useState(() => ({ ...DEFAULT, ...(initialWorkspace?.state || {}) }));
+  const [tab, setTab] = useState(() => (typeof initialWorkspace?.tab === "number" ? initialWorkspace.tab : 0));
+  const [autosaveAt, setAutosaveAt] = useState(() => (initialWorkspace?.savedAt ?? null));
   const tabs = [
     { label: "Launch & Startup", icon: "\uD83D\uDE80" },
     { label: "Unit Economics", icon: "\u2699\uFE0F" },
@@ -22,7 +50,24 @@ export default function MonchMonchCalculator() {
   ];
 
   const fileRef = useRef(null);
-  const reset = () => setState({ ...DEFAULT });
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const savedAt = Date.now();
+      writeWorkspace({ v: 1, state, tab, savedAt });
+      setAutosaveAt(savedAt);
+    }, 450);
+    return () => window.clearTimeout(id);
+  }, [state, tab]);
+
+  const reset = () => {
+    try {
+      localStorage.removeItem(PERSIST_KEY);
+    } catch { /* ignore */ }
+    setState({ ...DEFAULT });
+    setTab(0);
+    setAutosaveAt(null);
+  };
 
   const exportScenario = () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
@@ -41,7 +86,11 @@ export default function MonchMonchCalculator() {
     reader.onload = (ev) => {
       try {
         const loaded = JSON.parse(ev.target.result);
-        setState({ ...DEFAULT, ...loaded });
+        const next = { ...DEFAULT, ...loaded };
+        setState(next);
+        const savedAt = Date.now();
+        writeWorkspace({ v: 1, state: next, tab, savedAt });
+        setAutosaveAt(savedAt);
       } catch { /* ignore malformed files */ }
     };
     reader.readAsText(file);
@@ -71,6 +120,11 @@ export default function MonchMonchCalculator() {
             </h1>
             <p style={{ color: C.textMuted, fontSize: 13, margin: "4px 0 0", fontWeight: 500 }}>
               Interactive Operations & Revenue Calculator — v3.0
+            </p>
+            <p style={{ color: C.textDim, fontSize: 11, margin: "6px 0 0", fontWeight: 500 }}>
+              {autosaveAt
+                ? `Autosaved in this browser — ${new Date(autosaveAt).toLocaleString()}`
+                : "Edits autosave in this browser (localStorage). Reset clears the saved workspace."}
             </p>
           </div>
           <div style={{ display: "flex", gap: 8 }}>

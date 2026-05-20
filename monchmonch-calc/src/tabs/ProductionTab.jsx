@@ -46,16 +46,73 @@ export default function ProductionTab({ state, setState }) {
             onChange={(v) => setState((p) => ({ ...p, costOfCapitalPct: v }))} />
         </div>
         <div style={glassCard}>
-          <h3 style={h3Style}>SPOILAGE RATES</h3>
+          <h3 style={h3Style}>SPOILAGE & COST DRIVERS</h3>
           <SliderInput label="Bars (% / month)" value={state.spoilageBar} min={0} max={0.05} step={0.001}
             onChange={(v) => setState((p) => ({ ...p, spoilageBar: v }))} />
           <SliderInput label="Electrolytes (% / month)" value={state.spoilageElec} min={0} max={0.05} step={0.001}
             onChange={(v) => setState((p) => ({ ...p, spoilageElec: v }))} />
+          <InputRow label="Spoilage Cost Multiplier" value={state.spoilageCostMult} prefix="" suffix="x COGS" step={0.5} min={0} max={10}
+            tip="Scrap recovery? Use <1. Full loss? Use 1-3."
+            onChange={(v) => setState((p) => ({ ...p, spoilageCostMult: v }))} />
+          <SliderInput label="Carrying Cost Rate (% of inv value)" value={state.carryingCostRate} min={0} max={0.3} step={0.01}
+            onChange={(v) => setState((p) => ({ ...p, carryingCostRate: v }))} />
           <div style={{ marginTop: 16 }}>
             <h3 style={h3Style}>OPERATING EXPENSES</h3>
-            <InputRow label="G&A $/month" value={state.gna} step={100} onChange={(v) => setState((p) => ({ ...p, gna: v }))} />
-            <SliderInput label="Marketing (% of Revenue)" value={state.marketingPct} min={0} max={0.3} step={0.01}
-              onChange={(v) => setState((p) => ({ ...p, marketingPct: v }))} />
+            <InputRow label="G&A $/month (base, scaled by overheadMult)" value={state.gna} step={500} onChange={(v) => setState((p) => ({ ...p, gna: v }))} />
+            <InputRow label="Payroll Start Month (Y1)" value={state.payrollStartMonth} prefix="" suffix="mo" step={1} min={1} max={12}
+              onChange={(v) => setState((p) => ({ ...p, payrollStartMonth: v }))} />
+            <div style={{ marginTop: 12 }}>
+              <div style={{ ...labelStyle, marginBottom: 4 }}>MARKETING $ BY YEAR (overrides single-year)</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 6 }}>
+                {(state.marketingByYear || [600000, 1000000, 1750000, 2400000, 3500000]).map((v, i) => (
+                  <div key={i}>
+                    <div style={{ ...labelStyle, textAlign: "center", marginBottom: 2 }}>Y{i + 1}</div>
+                    <input type="number" value={v} step={5000} min={0}
+                      onChange={(e) => setState((p) => {
+                        const arr = [...(p.marketingByYear || [600000, 1000000, 1750000, 2400000, 3500000])];
+                        arr[i] = parseFloat(e.target.value) || 0;
+                        return { ...p, marketingByYear: arr };
+                      })}
+                      style={{ ...inputStyle, width: "100%", textAlign: "center", fontSize: 11 }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <div style={{ ...labelStyle, marginBottom: 4 }}>PAYROLL $ BY YEAR (fully-loaded; overrides Y1+increase)</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 6 }}>
+                {(state.payrollByYear || [571000, 972000, 1590000, 2370000, 3120000]).map((v, i) => (
+                  <div key={i}>
+                    <div style={{ ...labelStyle, textAlign: "center", marginBottom: 2 }}>Y{i + 1}</div>
+                    <input type="number" value={v} step={5000} min={0}
+                      onChange={(e) => setState((p) => {
+                        const arr = [...(p.payrollByYear || [571000, 972000, 1590000, 2370000, 3120000])];
+                        arr[i] = parseFloat(e.target.value) || 0;
+                        return { ...p, payrollByYear: arr };
+                      })}
+                      style={{ ...inputStyle, width: "100%", textAlign: "center", fontSize: 11 }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div style={{ marginTop: 16 }}>
+            <h3 style={h3Style}>OVERHEAD SCALING BY YEAR</h3>
+            <div style={{ fontSize: 10, color: C.textDim, marginBottom: 8 }}>Multiplier on Fixed OH & G&A (1.0 = no change, 1.5 = 50% increase)</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 6 }}>
+              {(state.overheadMult || [1,1,1.5,1.5,1.5]).map((v, i) => (
+                <div key={i}>
+                  <div style={{ ...labelStyle, textAlign: "center", marginBottom: 2 }}>Y{i + 1}</div>
+                  <input type="number" value={v} step={0.1} min={0.5} max={5}
+                    onChange={(e) => setState((p) => {
+                      const arr = [...(p.overheadMult || [1,1,1.5,1.5,1.5])];
+                      arr[i] = parseFloat(e.target.value) || 1;
+                      return { ...p, overheadMult: arr };
+                    })}
+                    style={{ ...inputStyle, width: "100%", textAlign: "center", fontSize: 12 }} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -86,6 +143,18 @@ export default function ProductionTab({ state, setState }) {
 
       <div style={{ ...glassCard, marginTop: 16 }}>
         <h3 style={h3Style}>SEASONALITY INDICES</h3>
+        {(() => {
+          const barAvg = state.barSeason.reduce((a, b) => a + b, 0) / 12;
+          const elecAvg = state.elecSeason.reduce((a, b) => a + b, 0) / 12;
+          const barOff = Math.abs(barAvg - 1.0) > 0.03;
+          const elecOff = Math.abs(elecAvg - 1.0) > 0.03;
+          return (barOff || elecOff) ? (
+            <div style={{ padding: "8px 12px", borderRadius: 6, background: C.amberGlow, border: `1px solid ${C.amber}30`, marginBottom: 12, fontSize: 11, color: C.amber }}>
+              {barOff && <div>Bar seasonality avg is {barAvg.toFixed(2)} (should be ~1.00). Annual demand will be {barAvg > 1 ? "inflated" : "deflated"} by {((barAvg - 1) * 100).toFixed(0)}%.</div>}
+              {elecOff && <div>Electrolyte seasonality avg is {elecAvg.toFixed(2)} (should be ~1.00). Annual demand will be {elecAvg > 1 ? "inflated" : "deflated"} by {((elecAvg - 1) * 100).toFixed(0)}%.</div>}
+            </div>
+          ) : null;
+        })()}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           <div>
             <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\uD83C\uDF6B Bars (avg: {(state.barSeason.reduce((a, b) => a + b, 0) / 12).toFixed(2)})</div>

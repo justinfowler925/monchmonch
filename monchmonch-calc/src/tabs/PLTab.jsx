@@ -45,6 +45,7 @@ export default function PLTab({ state }) {
                 { label: "Channel Costs", field: "channelCosts", color: C.textMuted, bold: false },
                 { label: "Fixed Overhead", field: "fixedOH", color: C.textMuted, bold: false },
                 { label: "Marketing", field: "marketing", color: C.textMuted, bold: false },
+                { label: "Payroll", field: "payroll", color: C.textMuted, bold: false },
                 { label: "G&A", field: "gna", color: C.textMuted, bold: false },
                 { label: "Carrying Costs", field: "carryingCost", color: C.textMuted, bold: false },
                 { label: "Spoilage", field: "spoilageCost", color: C.textMuted, bold: false },

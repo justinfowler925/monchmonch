@@ -83,6 +83,9 @@ export function runModel(s) {
   const computeY1Monthly = (barBaseDemand, elecBaseDemand, barSeason, elecSeason) => {
     let barBegInv = 0, elecBegInv = 0;
     const months = [];
+    const payStartIdx = Math.max((s.payrollStartMonth || 4) - 1, 0);
+    const payActiveMonths = Math.max(12 - payStartIdx, 1);
+    const monthlyPayroll = (s.payrollY1 || 0) / payActiveMonths;
     for (let m = 0; m < 12; m++) {
       const barAdj = Math.round(barBaseDemand[m] * barSeason[m]);
       const elecAdj = Math.round(elecBaseDemand[m] * elecSeason[m]);
@@ -101,6 +104,7 @@ export function runModel(s) {
       const grossRev = chRev.totalRev;
       const returns = grossRev * s.returnsPct;
       const netRev = grossRev - returns;
+      const payroll = m >= payStartIdx ? monthlyPayroll : 0;
 
       months.push({
         month: m + 1,
@@ -111,7 +115,7 @@ export function runModel(s) {
         barEndInv: barEnd, elecEndInv: elecEnd,
         barBelowMOQ, elecBelowMOQ,
         barUnitsSold: barAdj, elecUnitsSold: elecAdj,
-        grossRev, returns, netRev,
+        grossRev, returns, netRev, payroll,
         channelDetail: chRev.channelDetail, channelCosts: chRev.totalChannelCosts,
       });
       barBegInv = barEnd;
@@ -158,15 +162,23 @@ export function runModel(s) {
     const grossMargin = netRev > 0 ? grossProfit / netRev : 0;
 
     const channelCosts = chRev.totalChannelCosts;
-    const fixedOH = (s.fixedOverhead + s.equipAmort) * 12 * (y >= 3 ? 1.5 : 1);
-    const marketing = netRev * s.marketingPct;
-    const gna = s.gna * 12 * (y >= 3 ? 1.5 : 1);
-    const carryingCost = totalUnits * s.warehousingPerUnit * 0.1;
-    const spoilageCost = barUnits * s.spoilageBar * bCOGSUnit * 3 + elecUnits * s.spoilageElec * eCOGSUnit * 3;
+    const ohMult = (s.overheadMult && s.overheadMult[y]) || 1;
+    const fixedOH = (s.fixedOverhead + s.equipAmort) * 12 * ohMult;
+    const marketing = (s.marketingByYear && s.marketingByYear[y] != null)
+      ? s.marketingByYear[y]
+      : (s.marketingAnnual != null ? s.marketingAnnual : netRev * s.marketingPct);
+    const payroll = (s.payrollByYear && s.payrollByYear[y] != null)
+      ? s.payrollByYear[y]
+      : ((s.payrollY1 || 0) + (s.payrollAnnualIncrease || 0) * y);
+    const gna = s.gna * 12 * ohMult;
+    const ccRate = s.carryingCostRate || 0.10;
+    const carryingCost = totalUnits * s.warehousingPerUnit * ccRate;
+    const spMult = s.spoilageCostMult || 3;
+    const spoilageCost = barUnits * s.spoilageBar * bCOGSUnit * spMult + elecUnits * s.spoilageElec * eCOGSUnit * spMult;
     const commitmentCost = commitmentMonthly * 12;
     const debtService = debtMonthlyPayment * 12;
 
-    const totalOpex = channelCosts + fixedOH + marketing + gna + carryingCost + spoilageCost + commitmentCost + debtService;
+    const totalOpex = channelCosts + fixedOH + marketing + payroll + gna + carryingCost + spoilageCost + commitmentCost + debtService;
     const ebitda = grossProfit - totalOpex;
     const ebitdaMargin = netRev > 0 ? ebitda / netRev : 0;
 
@@ -177,7 +189,7 @@ export function runModel(s) {
     years.push({
       year: y + 1, barUnits, elecUnits, totalUnits, tier, bCOGSUnit, eCOGSUnit,
       netRev, totalCOGS, grossProfit, grossMargin,
-      channelCosts, fixedOH, marketing, gna, carryingCost, spoilageCost, commitmentCost, debtService,
+      channelCosts, fixedOH, marketing, payroll, gna, carryingCost, spoilageCost, commitmentCost, debtService,
       totalOpex, ebitda, ebitdaMargin, cashBalance, monthlyBurn, runwayMonths,
       channelDetail: chRev.channelDetail,
     });
