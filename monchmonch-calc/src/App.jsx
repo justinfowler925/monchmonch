@@ -12,8 +12,13 @@ import GuideTab from "./tabs/GuideTab.jsx";
  * v5: added licensingByYear, bdSalesByYear, clinicalByYear, marketingByYear, payrollByYear arrays;
  *     channel costPerUnit + alloc + ramps rebuilt; equityRaised dropped from $15M to $2.5M;
  *     bumping key invalidates all prior cached workspaces so investors land on v5.0 defaults.
+ * v6: bar BOM completed (was 8 of 14 ingredients qty=0; now all 14 populated + Monch Fiber added
+ *     as 15th); fixed 5 engineering bugs from Ben's audit (overhead double-count, dimensional COGS,
+ *     channel ramp in annual P&L, no working capital cash flow, channel caps in annual); added
+ *     arDays/inventoryDays/apDays for proper WC modeling; cumulative breakeven now computed
+ *     separately from single-year EBITDA+ year.
  */
-const PERSIST_KEY = "monchmonch-calc-workspace-v5";
+const PERSIST_KEY = "monchmonch-calc-workspace-v6";
 
 function readWorkspace() {
   if (typeof window === "undefined") return null;

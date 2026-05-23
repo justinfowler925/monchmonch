@@ -28,20 +28,20 @@ export function runModel(s) {
     return baseLaborPerUnit * scales[tier];
   };
 
-  const ohAtTier = (tier) => {
-    const midVols = [500, 5000, 50000, 250000, 750000, 2500000, 7500000];
-    return s.fixedOverhead / midVols[tier];
-  };
+  // BUG FIX (Ben audit #1+#2): Removed ohAtTier() entirely.
+  // (1) fixedOverhead is monthly $; midVols[tier] is annual units → dimensionally invalid ratio.
+  // (2) fixedOverhead already enters OpEx via fixedOH = (fixedOverhead + equipAmort) * 12 * ohMult,
+  //     so including it in per-unit COGS was a double-count.
+  // Per-unit COGS is now RM + labor + co-man + packaging. Overhead lives in OpEx where it belongs.
 
   const cogsWaterfall = (coManPrices, type) => {
     return s.coManLabels.map((label, i) => {
       const rm = type === "bar" ? [barRMT1, barRMT2, barRMT3] : [elecRMT1, elecRMT2, elecRMT3];
       const rmTier = i < 2 ? rm[0] : i < 4 ? rm[1] : rm[2];
       const labor = laborAtTier(i);
-      const oh = ohAtTier(i);
       const coMan = coManPrices[i];
       const pkg = type === "bar" ? barPkgPerUnit : elecPkgPerUnit;
-      return { tier: label, rm: rmTier, labor, overhead: oh, coMan, packaging: pkg, total: rmTier + labor + oh + coMan + pkg };
+      return { tier: label, rm: rmTier, labor, overhead: 0, coMan, packaging: pkg, total: rmTier + labor + coMan + pkg };
     });
   };
 
@@ -150,8 +150,21 @@ export function runModel(s) {
     const totalUnits = barUnits + elecUnits;
     const tier = getCoManTier(totalUnits);
 
-    const chRev = computeChannelRevenue(barUnits, elecUnits);
-    const grossRev = chRev.totalRev;
+    // BUG FIX (Ben audit #3+#7): Y1 channel ramps + max-monthly-caps were skipped in annual P&L
+    // (computeChannelRevenue called without `month` argument skipped both checks). For Y1,
+    // aggregate the monthly engine (which respects ramps + caps). Y2+ ramps complete by month 24
+    // so annual aggregate is fine for those years.
+    let grossRev, channelCosts, channelDetail;
+    if (y === 0) {
+      grossRev = monthly.reduce((a, m) => a + m.grossRev, 0);
+      channelCosts = monthly.reduce((a, m) => a + m.channelCosts, 0);
+      channelDetail = monthly[monthly.length - 1].channelDetail; // representative end-state mix
+    } else {
+      const chRev = computeChannelRevenue(barUnits, elecUnits);
+      grossRev = chRev.totalRev;
+      channelCosts = chRev.totalChannelCosts;
+      channelDetail = chRev.channelDetail;
+    }
     const returnsAmt = grossRev * s.returnsPct;
     const netRev = grossRev - returnsAmt;
 
@@ -161,7 +174,6 @@ export function runModel(s) {
     const grossProfit = netRev - totalCOGS;
     const grossMargin = netRev > 0 ? grossProfit / netRev : 0;
 
-    const channelCosts = chRev.totalChannelCosts;
     const ohMult = (s.overheadMult && s.overheadMult[y]) || 1;
     const fixedOH = (s.fixedOverhead + s.equipAmort) * 12 * ohMult;
     const marketing = (s.marketingByYear && s.marketingByYear[y] != null)
@@ -201,8 +213,26 @@ export function runModel(s) {
     const ebitda = combinedGP - totalOpex;
     const ebitdaMargin = combinedRev > 0 ? ebitda / combinedRev : 0;
 
-    cashBalance += ebitda;
-    const monthlyBurn = ebitda < 0 ? Math.abs(ebitda) / 12 : 0;
+    // BUG FIX (Ben audit #4): Working capital cash flow.
+    // Prior model: cashBalance += ebitda (cumulative EBITDA, no WC) — understates trough depth.
+    // Now: proper EOY AR / Inventory / AP balances + deltas = real cash flow from operations.
+    // Days are industry-standard CPG nutrition (arDays 35, inventoryDays 60, apDays 30 = 65d CCC).
+    const arDaysVal = s.arDays ?? 35;
+    const invDaysVal = s.inventoryDays ?? 60;
+    const apDaysVal = s.apDays ?? 30;
+    const arBal = combinedRev * (arDaysVal / 365);
+    const invBal = combinedCogs * (invDaysVal / 365);
+    const apBal = combinedCogs * (apDaysVal / 365);
+    const priorAR = y === 0 ? 0 : years[y - 1].arBal;
+    const priorInv = y === 0 ? 0 : years[y - 1].invBal;
+    const priorAP = y === 0 ? 0 : years[y - 1].apBal;
+    const deltaAR = arBal - priorAR;
+    const deltaInv = invBal - priorInv;
+    const deltaAP = apBal - priorAP;
+    const cashFromOps = ebitda - deltaAR - deltaInv + deltaAP;
+
+    cashBalance += cashFromOps;
+    const monthlyBurn = cashFromOps < 0 ? Math.abs(cashFromOps) / 12 : 0;
     const runwayMonths = monthlyBurn > 0 ? Math.floor(cashBalance / monthlyBurn) : 999;
 
     years.push({
@@ -217,21 +247,35 @@ export function runModel(s) {
       // New OpEx lines
       bdSales, clinical,
       channelCosts, fixedOH, marketing, payroll, gna, carryingCost, spoilageCost, commitmentCost, debtService,
-      totalOpex, ebitda, ebitdaMargin, cashBalance, monthlyBurn, runwayMonths,
-      channelDetail: chRev.channelDetail,
+      totalOpex, ebitda, ebitdaMargin,
+      // Working capital + cash flow (Ben audit #4 fix)
+      arBal, invBal, apBal, deltaAR, deltaInv, deltaAP, cashFromOps,
+      cashBalance, monthlyBurn, runwayMonths,
+      channelDetail,
     });
   }
 
   let cumEBITDA = 0;
   years.forEach((y) => { cumEBITDA += y.ebitda; y.cumEBITDA = cumEBITDA; });
 
+  // Single-year EBITDA+ month: first month of first year where annual EBITDA is positive.
+  // (Y3 onset = month 25 in current scenario)
   const breakEvenMonth = (() => {
-    let cum = s.startingCash + s.equityRaised + s.debtAmount - startupCapex;
+    for (let y = 0; y < 5; y++) {
+      if (years[y].ebitda > 0) return y * 12 + 1;
+    }
+    return null;
+  })();
+
+  // BUG FIX (Ben audit gap #9): Cumulative breakeven — month where cumulative EBITDA crosses zero.
+  // Distinct from single-year breakeven. Deck "Y3 breakeven" was ambiguous; cumulative typically
+  // happens 12-15 months AFTER single-year EBITDA+. In current scenario: ~month 39 (Y4 Q1).
+  const cumulativeBreakEvenMonth = (() => {
+    let cum = 0;
     for (let m = 0; m < 60; m++) {
       const yIdx = Math.min(Math.floor(m / 12), 4);
-      const yr = years[yIdx];
-      cum += yr.ebitda / 12;
-      if (yr.ebitda > 0 && m > 0) return m + 1;
+      cum += years[yIdx].ebitda / 12;
+      if (cum > 0) return m + 1;
     }
     return null;
   })();
@@ -259,6 +303,6 @@ export function runModel(s) {
     opTier, y1BarUnits, y1ElecUnits, y1TotalUnits,
     startupCapex, commitmentMonthly, debtMonthlyPayment,
     barRMMoqCost, elecRMMoqCost, barPkgMoqCost, elecPkgMoqCost,
-    breakEvenMonth, workingCapitalMonthly, activeChannels,
+    breakEvenMonth, cumulativeBreakEvenMonth, workingCapitalMonthly, activeChannels,
   };
 }

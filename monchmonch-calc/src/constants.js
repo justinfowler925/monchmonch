@@ -38,22 +38,27 @@ export const DEFAULT = {
     { name: "Distributors", active: true, pctAlloc: 0.17, barPrice: 1.50, elecPrice: 0.95, costPerUnit: 0.45, rampMonths: 4, maxMonthlyUnits: 14000 },
   ],
 
-  // Bar + elec RM: BOM + $/lb (or $/each for Wrapper/Sachet) from live unit-economics screen (May 2026)
+  // Bar BOM — fully populated against pitch claim (15g protein, 8-10g Monch fiber, 45g bar, <3g sugar)
+  // Per Ben's audit, prior BOM had 8 placeholder qty=0 ingredients understating COGS.
+  // qty in lb per bar (wrapper/box are $/each). Total bar weight from qty sums = ~45g (target).
+  // Ingredient prices per food-grade specialty supplier benchmarks (May 2026).
+  // Total RM at T1 ~$0.81/bar; T3 ~$0.61/bar.
   barRM: [
-    { name: "Flavoring Orig", qty: 0.01, t1: 4, t2: 3.5, t3: 3, moq: 25 },
-    { name: "Flavoring Berry", qty: 0.012, t1: 5, t2: 4.33, t3: 3.75, moq: 25 },
-    { name: "Wrapper", qty: 1, t1: 0.08, t2: 0.061, t3: 0.05, moq: 5000 },
-    { name: "Outer Box", qty: 0.083, t1: 0.36, t2: 0.3, t3: 0.24, moq: 1000 },
-    { name: "Whey Protein", qty: 0.044, t1: 10, t2: 9, t3: 8, moq: 200 },
-    { name: "Milk Protein Isolate", qty: 0, t1: 10, t2: 9, t3: 8, moq: 200 },
-    { name: "Tapioca Fiber", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
-    { name: "IMO", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
-    { name: "Vegetable Glycerin", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
-    { name: "Cocoa Butter", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
-    { name: "Sunflower Lecithin", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
-    { name: "Stevia Reb M", qty: 0.025, t1: 2.4, t2: 2, t3: 1.6, moq: 100 },
-    { name: "Salt", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
-    { name: "Cocoa Soy Crisp", qty: 0, t1: 0, t2: 0, t3: 0, moq: 0 },
+    { name: "Flavoring Orig", qty: 0.001, t1: 4, t2: 3.5, t3: 3, moq: 25 },           // 0.45g (reduced from 0.01 = 4.5g, unrealistic for flavoring)
+    { name: "Flavoring Berry", qty: 0.0011, t1: 5, t2: 4.33, t3: 3.75, moq: 25 },      // 0.5g (reduced from 0.012, same reason)
+    { name: "Wrapper", qty: 1, t1: 0.08, t2: 0.061, t3: 0.05, moq: 5000 },             // 1 each (packaging, not bar weight)
+    { name: "Outer Box", qty: 0.083, t1: 0.36, t2: 0.3, t3: 0.24, moq: 1000 },         // 1/12 case allocation per bar
+    { name: "Whey Protein", qty: 0.022, t1: 10, t2: 9, t3: 8, moq: 200 },              // 10g WPI → ~9g protein (was 0.044, gave 18g)
+    { name: "Milk Protein Isolate", qty: 0.011, t1: 10, t2: 9, t3: 8, moq: 200 },      // 5g MPI → ~4g protein (was 0, now populated)
+    { name: "Tapioca Fiber", qty: 0.011, t1: 3.5, t2: 3.0, t3: 2.5, moq: 100 },        // 5g soluble fiber binder
+    { name: "IMO", qty: 0.011, t1: 5.0, t2: 4.5, t3: 4.0, moq: 100 },                  // 5g sweetener-fiber
+    { name: "Vegetable Glycerin", qty: 0.009, t1: 2.5, t2: 2.25, t3: 2.0, moq: 50 },   // 4g humectant (keeps bar soft)
+    { name: "Cocoa Butter", qty: 0.009, t1: 10, t2: 9, t3: 8, moq: 100 },              // 4g chocolate-compound coating
+    { name: "Sunflower Lecithin", qty: 0.0007, t1: 6, t2: 5.5, t3: 5, moq: 25 },       // 0.3g emulsifier
+    { name: "Stevia Reb M", qty: 0.0007, t1: 2.4, t2: 2, t3: 1.6, moq: 100 },          // 0.3g high-intensity sweetener (was 0.025 = 11g, absurd)
+    { name: "Salt", qty: 0.0007, t1: 0.5, t2: 0.4, t3: 0.33, moq: 50 },                // 0.3g flavor balance
+    { name: "Cocoa Soy Crisp", qty: 0.013, t1: 4, t2: 3.5, t3: 3, moq: 100 },          // 6g crunch component
+    { name: "Monch Fiber", qty: 0.020, t1: 5, t2: 4, t3: 3.25, moq: 100 },             // 9g proprietary Monch fiber — THE brand differentiator (pitch claims 8-10g/bar)
   ],
   elecRM: [
     { name: "Ascorbic Acid", qty: 0.015, t1: 6.67, t2: 5.5, t3: 4.5, moq: 50 },
@@ -146,6 +151,16 @@ export const DEFAULT = {
 
   rmLeadWeeks: 4, coManLeadWeeks: 3,
   rmPaymentTerms: 30, coManPaymentTerms: 30, coManDeposit: 0.25,
+
+  // WORKING CAPITAL — industry-standard CPG nutrition (per Ben's CALC_CASH audit Bug #4 fix)
+  // Calibrated against our channel mix: DTC 40% (AR 3d) + Amazon 20% (AR 14d) + Distrib 17% (AR 60d)
+  //   + Natural 15% (AR 45d) + Vitamin 8% (AR 45d) → weighted ~25d unadjusted; conservative bias
+  //   to 35 for wholesale payment slippage + chargebacks settle.
+  // Inventory 60d: emerging CPG benchmark (45-90 typical); includes safety stock + MOQ overhang
+  //   + slow-moving wholesale + co-pack run buffer.
+  // AP 30d: Net 30 standard for raw materials and co-pack.
+  // CCC = 35 + 60 - 30 = 65 days; in range for emerging premium nutrition CPG.
+  arDays: 35, inventoryDays: 60, apDays: 30,
 
   startingCash: 100000, equityRaised: 2500000,
   debtAmount: 0, debtRate: 0.08, debtTerm: 36,

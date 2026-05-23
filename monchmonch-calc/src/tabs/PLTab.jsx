@@ -61,7 +61,11 @@ export default function PLTab({ state }) {
                 { label: "EBITDA Margin %", field: "ebitdaMargin", color: null, bold: false, pct: true, dynamic: true },
                 { label: "Cumulative EBITDA", field: "cumEBITDA", color: null, bold: true, dynamic: true },
                 { label: "", field: null },
-                { label: "Cash Balance", field: "cashBalance", color: null, bold: true, dynamic: true },
+                { label: "Δ Accounts Receivable (AR build)", field: "deltaAR", color: C.textMuted, bold: false },
+                { label: "Δ Inventory (Inv build)", field: "deltaInv", color: C.textMuted, bold: false },
+                { label: "Δ Accounts Payable (AP build, +)", field: "deltaAP", color: C.textMuted, bold: false },
+                { label: "CASH FROM OPERATIONS", field: "cashFromOps", color: C.cyan, bold: true, dynamic: true },
+                { label: "Cash Balance (EOY, after WC)", field: "cashBalance", color: null, bold: true, dynamic: true },
               ].map((row, idx) => {
                 if (!row.field) return <tr key={idx}><td colSpan={6} style={{ height: 8 }} /></tr>;
                 return (
