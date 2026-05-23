@@ -8,8 +8,12 @@ import PLTab from "./tabs/PLTab.jsx";
 import FinancingTab from "./tabs/FinancingTab.jsx";
 import GuideTab from "./tabs/GuideTab.jsx";
 
-/** Persisted workspace (this browser only). Bump if stored shape changes incompatibly. */
-const PERSIST_KEY = "monchmonch-calc-workspace-v1";
+/** Persisted workspace (this browser only). Bump if stored shape changes incompatibly.
+ * v5: added licensingByYear, bdSalesByYear, clinicalByYear, marketingByYear, payrollByYear arrays;
+ *     channel costPerUnit + alloc + ramps rebuilt; equityRaised dropped from $15M to $2.5M;
+ *     bumping key invalidates all prior cached workspaces so investors land on v5.0 defaults.
+ */
+const PERSIST_KEY = "monchmonch-calc-workspace-v5";
 
 function readWorkspace() {
   if (typeof window === "undefined") return null;
@@ -119,7 +123,7 @@ export default function MonchMonchCalculator() {
               MonchMonch Financial Model
             </h1>
             <p style={{ color: C.textMuted, fontSize: 13, margin: "4px 0 0", fontWeight: 500 }}>
-              Interactive Operations & Revenue Calculator — v3.0
+              Interactive Operations & Revenue Calculator — v5.0 (bars + ingredient licensing)
             </p>
             <p style={{ color: C.textDim, fontSize: 11, margin: "6px 0 0", fontWeight: 500 }}>
               {autosaveAt
@@ -180,7 +184,7 @@ export default function MonchMonchCalculator() {
 
       <div style={{ textAlign: "center", padding: "20px 32px 0", borderTop: `1px solid ${C.border}` }}>
         <span style={{ fontSize: 11, color: C.textDim }}>
-          MonchMonch Financial Model Calculator — KH Framework v3.0 — All calculations run client-side
+          MonchMonch Financial Model Calculator — KH Framework v5.0 — All calculations run client-side
         </span>
       </div>
     </div>
