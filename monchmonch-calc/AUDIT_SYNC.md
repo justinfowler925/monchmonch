@@ -124,6 +124,81 @@ Spreadsheet → JSON → calc reproduces native calc values within ~2% rounding 
 
 The cell map in this doc and the cell reads in `scripts/xlsx_to_scenario.py` must stay in sync. When you update one, update the other.
 
+## Pitch HTML auto-sync (`scripts/sync-pitch.js` + marker system)
+
+The pitch HTML financial values are driven by the calc model via marker comments. When you change a calc input (constants.js, or via the live calc UI for testing), run `npm run sync-pitch` to push the new values into the pitch HTML automatically.
+
+### Workflow
+
+```bash
+# After editing constants.js (or model.js) in the calc repo:
+npm run sync-pitch:dry    # preview what would change (no writes)
+npm run sync-pitch        # apply updates to pitch index.html
+npm run sync-pitch:check  # exit 1 if pitch out of sync (use in CI/pre-commit)
+```
+
+Then commit + push the pitch repo.
+
+### How it works
+
+Every dynamic value in the pitch HTML is wrapped in marker comments:
+
+```html
+<td>Bars + Electrolytes Revenue</td>
+<td><!--M:Y1_BARS_REV-->$281K<!--/M--></td>
+<td><!--M:Y2_BARS_REV-->$748K<!--/M--></td>
+```
+
+The script:
+1. Imports `runModel(DEFAULT)` from the calc
+2. Computes 170+ formatted values keyed by marker name (Y1_BARS_REV, Y5_EBITDA, MIN_CASH, CUM_BREAKEVEN_MO, etc.)
+3. Walks the pitch HTML, finds every `<!--M:KEY-->...<!--/M-->` block
+4. Replaces the inner text with the current model value
+5. Writes back
+
+Markers don't affect rendering — HTML comments are invisible. You can read the pitch HTML normally and edit narrative text freely. The script only touches what's inside marker pairs.
+
+### Marker keys (current schema, see `scripts/sync-pitch.js` for full list)
+
+- `Y{N}_BARS_REV`, `Y{N}_LIC_REV`, `Y{N}_TOT_REV` — annual revenue (N=1-5)
+- `Y{N}_COGS`, `Y{N}_GP`, `Y{N}_GM` — gross profit + margin
+- `Y{N}_EBITDA`, `Y{N}_EBITDA_MARGIN` — EBITDA + margin (signed format for EBITDA)
+- `Y{N}_CFO` — cash from operations (signed)
+- `Y{N}_CASH`, `Y{N}_CUM_EBITDA` — running totals
+- `Y{N}_MARKETING`, `Y{N}_PAYROLL`, `Y{N}_BDSALES`, `Y{N}_CLINICAL` — opex by line by year
+- `Y{N}_GNA`, `Y{N}_FIXED_OH`, `Y{N}_CHANNEL_COSTS` — more opex lines
+- `Y{N}_TOT_OPEX` — total opex by year
+- `Y{N}_BAR_UNITS`, `Y{N}_ELEC_UNITS`, `Y{N}_TOT_UNITS` — unit volumes
+- `BAR_COGS_T{N}`, `ELEC_COGS_T{N}` — COGS by co-man tier (N=1-7)
+- `MIN_CASH`, `Y5_CASH`, `TROUGH_YEAR` — headline cash metrics
+- `SY_BREAKEVEN_MO`, `CUM_BREAKEVEN_MO` — breakeven months
+- `CUM_LOSS_BREAKEVEN` — deepest cumulative loss
+- `TOTAL_RAISE`, `SEED_AMOUNT`, `FOUNDER_EQUITY` — capital raise
+- `AR_DAYS`, `INV_DAYS`, `AP_DAYS`, `CCC_DAYS` — working-capital assumptions
+- `CUM_MKT_Y1Y4`, `CUM_PAY_Y1Y3`, etc. — cumulative use-of-funds totals
+- Plus alias keys for table/chart/card variants (e.g. `Y5_EBITDA_CARD`, `Y3_TOT_REV_CHART`)
+
+### Adding new markers
+
+If you add a new dynamic value to the pitch:
+
+1. Wrap it in `<!--M:NEW_KEY-->current_value<!--/M-->` in the HTML
+2. Add `m.NEW_KEY = formatter(...)` to `buildMarkers()` in `scripts/sync-pitch.js`
+3. Run `npm run sync-pitch:dry` — should report 0 unknowns
+
+The script logs unknown markers (those in HTML but missing from the dictionary) as warnings without touching them. Safe to run partially-instrumented HTML.
+
+### Hooking into git (optional)
+
+Add `npm run sync-pitch:check` to a pre-commit hook in the calc repo:
+
+```bash
+# .git/hooks/pre-commit
+cd monchmonch-calc && npm run sync-pitch:check
+```
+
+This blocks commits that would leave pitch out of sync. Or run it in CI.
+
 ## Inviting external re-audit
 
 If Ben (or another auditor) wants to do a fresh pass:
