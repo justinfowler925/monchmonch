@@ -51,13 +51,13 @@ export default function MonchMonchCalculator() {
   const [tab, setTab] = useState(() => (typeof initialWorkspace?.tab === "number" ? initialWorkspace.tab : 0));
   const [autosaveAt, setAutosaveAt] = useState(() => (initialWorkspace?.savedAt ?? null));
   const tabs = [
-    { label: "Launch & Startup", icon: "\uD83D\uDE80" },
-    { label: "Unit Economics", icon: "\u2699\uFE0F" },
-    { label: "Revenue & Channel", icon: "\uD83D\uDCB0" },
-    { label: "Production & Inventory", icon: "\uD83C\uDFED" },
-    { label: "5-Year P&L", icon: "\uD83D\uDCCA" },
-    { label: "Financing & Capital", icon: "\uD83C\uDFE6" },
-    { label: "Guide", icon: "\u2753" },
+    { label: "Launch & Startup", icon: "🚀" },
+    { label: "Unit Economics", icon: "⚙️" },
+    { label: "Revenue & Channel", icon: "💰" },
+    { label: "Production & Inventory", icon: "🏭" },
+    { label: "5-Year P&L", icon: "📊" },
+    { label: "Financing & Capital", icon: "🏦" },
+    { label: "Guide", icon: "❓" },
   ];
 
   const fileRef = useRef(null);

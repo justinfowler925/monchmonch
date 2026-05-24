@@ -44,10 +44,10 @@ export default function LaunchTab({ state, setState }) {
   return (
     <div>
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-        <MetricCard label="Total Startup Capital" value={fmt(totalStartup)} color={C.red} icon="\uD83D\uDCB0" />
-        <MetricCard label="Total Funding" value={fmt(totalFunding)} color={C.green} icon="\uD83C\uDFE6" />
-        <MetricCard label={gap > 0 ? "Funding Gap" : "Surplus"} value={fmt(Math.abs(gap))} color={gap > 0 ? C.red : C.green} icon={gap > 0 ? "\u26A0\uFE0F" : "\u2705"} />
-        <MetricCard label="Monthly Commitments" value={fmt(model.commitmentMonthly)} color={C.amber} icon="\uD83D\uDCCB" sub="/month fixed" />
+        <MetricCard label="Total Startup Capital" value={fmt(totalStartup)} color={C.red} icon="💰" />
+        <MetricCard label="Total Funding" value={fmt(totalFunding)} color={C.green} icon="🏦" />
+        <MetricCard label={gap > 0 ? "Funding Gap" : "Surplus"} value={fmt(Math.abs(gap))} color={gap > 0 ? C.red : C.green} icon={gap > 0 ? "⚠️" : "✅"} />
+        <MetricCard label="Monthly Commitments" value={fmt(model.commitmentMonthly)} color={C.amber} icon="📋" sub="/month fixed" />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -148,7 +148,7 @@ export default function LaunchTab({ state, setState }) {
 
           <div style={{ marginTop: 20, padding: 16, borderRadius: 10, background: gap > 0 ? C.redGlow : C.greenGlow, border: `1px solid ${gap > 0 ? C.red : C.green}30` }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: gap > 0 ? C.red : C.green, marginBottom: 4 }}>
-              {gap > 0 ? `\u26A0\uFE0F Funding Gap: ${fmt(gap)}` : `\u2705 Funded with ${fmt(Math.abs(gap))} surplus`}
+              {gap > 0 ? `⚠️ Funding Gap: ${fmt(gap)}` : `✅ Funded with ${fmt(Math.abs(gap))} surplus`}
             </div>
             <div style={{ fontSize: 11, color: C.textMuted }}>
               Total capital required vs. available funding sources
@@ -225,7 +225,7 @@ export default function LaunchTab({ state, setState }) {
                 </td>
                 <td style={{ padding: "4px" }}>
                   <button onClick={() => setState((p) => ({ ...p, commitments: p.commitments.filter((_, j) => j !== i) }))}
-                    style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"\u2715"}</button>
+                    style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"✕"}</button>
                 </td>
               </tr>
             ))}

@@ -29,10 +29,10 @@ export default function FinancingTab({ state, setState }) {
   return (
     <div>
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-        <MetricCard label="Total Capital Needed" value={fmt(totalCapitalNeeded)} color={C.red} icon="\uD83D\uDCB8" sub="startup + WC + runway" />
-        <MetricCard label="Capital Available" value={fmt(totalCapitalAvailable)} color={C.green} icon="\uD83C\uDFE6" />
-        <MetricCard label={capitalGap > 0 ? "Funding Gap" : "Surplus"} value={fmt(Math.abs(capitalGap))} color={capitalGap > 0 ? C.red : C.green} icon={capitalGap > 0 ? "\u26A0\uFE0F" : "\u2705"} />
-        <MetricCard label="Break-Even" value={model.breakEvenMonth ? `Month ${model.breakEvenMonth}` : "N/A"} color={C.amber} icon="\uD83C\uDFAF" sub={model.breakEvenMonth ? `~Year ${Math.ceil(model.breakEvenMonth / 12)}` : "Not within 5 years"} />
+        <MetricCard label="Total Capital Needed" value={fmt(totalCapitalNeeded)} color={C.red} icon="💸" sub="startup + WC + runway" />
+        <MetricCard label="Capital Available" value={fmt(totalCapitalAvailable)} color={C.green} icon="🏦" />
+        <MetricCard label={capitalGap > 0 ? "Funding Gap" : "Surplus"} value={fmt(Math.abs(capitalGap))} color={capitalGap > 0 ? C.red : C.green} icon={capitalGap > 0 ? "⚠️" : "✅"} />
+        <MetricCard label="Break-Even" value={model.breakEvenMonth ? `Month ${model.breakEvenMonth}` : "N/A"} color={C.amber} icon="🎯" sub={model.breakEvenMonth ? `~Year ${Math.ceil(model.breakEvenMonth / 12)}` : "Not within 5 years"} />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -129,7 +129,7 @@ export default function FinancingTab({ state, setState }) {
                     const c = row.dynamic ? (val >= 0 ? C.green : C.red) : row.color;
                     return (
                       <td key={y.year} style={{ padding: "8px", textAlign: "right", color: c, fontWeight: 600 }}>
-                        {row.isNum ? (val >= 999 ? "\u221E" : fmtN(val)) : fmt(val)}
+                        {row.isNum ? (val >= 999 ? "∞" : fmtN(val)) : fmt(val)}
                       </td>
                     );
                   })}

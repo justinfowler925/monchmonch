@@ -29,10 +29,10 @@ export default function RevenueTab({ state, setState }) {
   return (
     <div>
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-        <MetricCard label="Y1 Net Revenue" value={fmt(y1.netRev)} color={C.violet} icon="\uD83D\uDCB0" sub={`${fmtN(y1.totalUnits)} units`} />
-        <MetricCard label="Y5 Net Revenue" value={fmt(model.years[4].netRev)} color={C.purple} icon="\uD83D\uDE80" sub={`${fmtN(model.years[4].totalUnits)} units`} />
-        <MetricCard label="Blended ASP" value={fmt(y1.netRev / y1.totalUnits, 2)} color={C.amber} icon="\uD83D\uDCCA" sub="net revenue / unit" />
-        <MetricCard label="Gross Margin" value={fmtPct(y1.grossMargin)} color={C.green} icon="\uD83D\uDCC8" />
+        <MetricCard label="Y1 Net Revenue" value={fmt(y1.netRev)} color={C.violet} icon="💰" sub={`${fmtN(y1.totalUnits)} units`} />
+        <MetricCard label="Y5 Net Revenue" value={fmt(model.years[4].netRev)} color={C.purple} icon="🚀" sub={`${fmtN(model.years[4].totalUnits)} units`} />
+        <MetricCard label="Blended ASP" value={fmt(y1.netRev / y1.totalUnits, 2)} color={C.amber} icon="📊" sub="net revenue / unit" />
+        <MetricCard label="Gross Margin" value={fmtPct(y1.grossMargin)} color={C.green} icon="📈" />
       </div>
 
       <div style={{ ...glassCard, marginBottom: 16 }}>
@@ -103,7 +103,7 @@ export default function RevenueTab({ state, setState }) {
                     <td style={{ textAlign: "center", padding: "6px", color: C.green, fontWeight: 700 }}>{fmt(chRev)}</td>
                     <td style={{ padding: "6px" }}>
                       <button onClick={() => setState((p) => ({ ...p, channels: p.channels.filter((_, j) => j !== i) }))}
-                        style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"\u2715"}</button>
+                        style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"✕"}</button>
                     </td>
                   </tr>
                 );

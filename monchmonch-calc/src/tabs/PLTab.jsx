@@ -11,10 +11,10 @@ export default function PLTab({ state }) {
   return (
     <div>
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-        <MetricCard label="Y5 Revenue" value={fmt(y5.netRev)} color={C.violet} icon="\uD83D\uDCB0" sub={`${fmtN(y5.totalUnits)} units`} />
-        <MetricCard label="Y5 Gross Margin" value={fmtPct(y5.grossMargin)} color={C.green} icon="\uD83D\uDCC8" />
-        <MetricCard label="Y5 EBITDA" value={fmt(y5.ebitda)} color={y5.ebitda >= 0 ? C.green : C.red} icon={y5.ebitda >= 0 ? "\u2705" : "\u26A0\uFE0F"} />
-        <MetricCard label="Cumulative EBITDA" value={fmt(y5.cumEBITDA)} color={y5.cumEBITDA >= 0 ? C.green : C.red} icon="\uD83D\uDCCA" sub="5-year total" />
+        <MetricCard label="Y5 Revenue" value={fmt(y5.netRev)} color={C.violet} icon="💰" sub={`${fmtN(y5.totalUnits)} units`} />
+        <MetricCard label="Y5 Gross Margin" value={fmtPct(y5.grossMargin)} color={C.green} icon="📈" />
+        <MetricCard label="Y5 EBITDA" value={fmt(y5.ebitda)} color={y5.ebitda >= 0 ? C.green : C.red} icon={y5.ebitda >= 0 ? "✅" : "⚠️"} />
+        <MetricCard label="Cumulative EBITDA" value={fmt(y5.cumEBITDA)} color={y5.cumEBITDA >= 0 ? C.green : C.red} icon="📊" sub="5-year total" />
       </div>
 
       <div style={{ ...glassCard, marginBottom: 16 }}>

@@ -25,10 +25,10 @@ export default function ProductionTab({ state, setState }) {
   return (
     <div>
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-        <MetricCard label="Y1 Bar Units" value={fmtN(model.y1BarUnits)} color={C.purple} icon="\uD83C\uDF6B" />
-        <MetricCard label="Y1 Elec Units" value={fmtN(model.y1ElecUnits)} color={C.violet} icon="\u26A1" />
-        <MetricCard label="Y1 Total Units" value={fmtN(model.y1TotalUnits)} color={C.amber} icon="\uD83D\uDCE6" />
-        <MetricCard label="Operating Vol Tier" value={`Tier ${model.opTier + 1}`} color={C.green} icon="\uD83C\uDFED" sub={state.coManLabels[model.opTier]} />
+        <MetricCard label="Y1 Bar Units" value={fmtN(model.y1BarUnits)} color={C.purple} icon="🍫" />
+        <MetricCard label="Y1 Elec Units" value={fmtN(model.y1ElecUnits)} color={C.violet} icon="⚡" />
+        <MetricCard label="Y1 Total Units" value={fmtN(model.y1TotalUnits)} color={C.amber} icon="📦" />
+        <MetricCard label="Operating Vol Tier" value={`Tier ${model.opTier + 1}`} color={C.green} icon="🏭" sub={state.coManLabels[model.opTier]} />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>

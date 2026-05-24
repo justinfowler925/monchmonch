@@ -11,7 +11,7 @@ export const C = {
 };
 
 export const fmt = (n, dec = 0) => {
-  if (n === undefined || n === null || isNaN(n)) return "\u2014";
+  if (n === undefined || n === null || isNaN(n)) return "—";
   if (Math.abs(n) >= 1e6) return `$${(n / 1e6).toFixed(2)}M`;
   if (Math.abs(n) >= 1e3 && dec === 0) return `$${(n / 1e3).toFixed(1)}K`;
   return n < 0
@@ -19,8 +19,8 @@ export const fmt = (n, dec = 0) => {
     : `$${n.toLocaleString(undefined, { minimumFractionDigits: dec, maximumFractionDigits: dec })}`;
 };
 export const fmtN = (n, dec = 0) =>
-  n === undefined || isNaN(n) ? "\u2014" : n.toLocaleString(undefined, { minimumFractionDigits: dec, maximumFractionDigits: dec });
-export const fmtPct = (n) => (isNaN(n) ? "\u2014" : `${(n * 100).toFixed(1)}%`);
+  n === undefined || isNaN(n) ? "—" : n.toLocaleString(undefined, { minimumFractionDigits: dec, maximumFractionDigits: dec });
+export const fmtPct = (n) => (isNaN(n) ? "—" : `${(n * 100).toFixed(1)}%`);
 
 export const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -75,7 +75,7 @@ export const DEFAULT = {
   coManBars: [1.35, 1.20, 1.10, 1.00, 0.92, 0.85, 0.80],
   coManElec: [0.45, 0.40, 0.35, 0.30, 0.27, 0.25, 0.22],
   coManThresholds: [0, 1000, 10000, 100000, 500000, 1000000, 5000000],
-  coManLabels: ["1\u2013999", "1K\u201310K", "10K\u2013100K", "100K\u2013500K", "500K\u20131M", "1M\u20135M", "5M+"],
+  coManLabels: ["1–999", "1K–10K", "10K–100K", "100K–500K", "500K–1M", "1M–5M", "5M+"],
 
   laborPerUnit: 0.3, fixedOverhead: 5000, equipAmort: 2000,
   laborRoles: [

@@ -122,10 +122,10 @@ export default function UnitEconTab({ state, setState }) {
   return (
     <div>
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-        <MetricCard label="Bar RM Cost (T1)" value={fmt(model.barRMT1, 3)} sub="/unit" color={C.purple} icon="\uD83C\uDF6B" />
-        <MetricCard label="Elec RM Cost (T1)" value={fmt(model.elecRMT1, 3)} sub="/unit" color={C.violet} icon="\u26A1" />
-        <MetricCard label="Bar COGS @ Operating" value={fmt(model.barCOGS[model.opTier]?.total, 3)} sub={`Tier ${model.opTier + 1} \u2022 ${fmtN(model.y1TotalUnits)} units`} color={C.amber} icon="\uD83D\uDCE6" />
-        <MetricCard label="Elec COGS @ Operating" value={fmt(model.elecCOGS[model.opTier]?.total, 3)} sub={`incl. ${fmt(model.elecPkgPerUnit, 3)} pkg`} color={C.orange} icon="\uD83D\uDCE6" />
+        <MetricCard label="Bar RM Cost (T1)" value={fmt(model.barRMT1, 3)} sub="/unit" color={C.purple} icon="🍫" />
+        <MetricCard label="Elec RM Cost (T1)" value={fmt(model.elecRMT1, 3)} sub="/unit" color={C.violet} icon="⚡" />
+        <MetricCard label="Bar COGS @ Operating" value={fmt(model.barCOGS[model.opTier]?.total, 3)} sub={`Tier ${model.opTier + 1} • ${fmtN(model.y1TotalUnits)} units`} color={C.amber} icon="📦" />
+        <MetricCard label="Elec COGS @ Operating" value={fmt(model.elecCOGS[model.opTier]?.total, 3)} sub={`incl. ${fmt(model.elecPkgPerUnit, 3)} pkg`} color={C.orange} icon="📦" />
       </div>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
@@ -157,8 +157,8 @@ export default function UnitEconTab({ state, setState }) {
       <div style={{ ...glassCard, marginTop: 16 }}>
         <h3 style={h3Style}>📦 PACKAGING COSTS</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-          {[{ label: "\uD83C\uDF6B Bars", type: "bar", data: state.barPackaging, moqTotal: model.barPkgMoqCost, perUnit: model.barPkgPerUnit },
-            { label: "\u26A1 Electrolytes", type: "elec", data: state.elecPackaging, moqTotal: model.elecPkgMoqCost, perUnit: model.elecPkgPerUnit }].map((grp) => (
+          {[{ label: "🍫 Bars", type: "bar", data: state.barPackaging, moqTotal: model.barPkgMoqCost, perUnit: model.barPkgPerUnit },
+            { label: "⚡ Electrolytes", type: "elec", data: state.elecPackaging, moqTotal: model.elecPkgMoqCost, perUnit: model.elecPkgPerUnit }].map((grp) => (
             <div key={grp.type}>
               <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>{grp.label}</div>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
@@ -303,7 +303,7 @@ export default function UnitEconTab({ state, setState }) {
                 </td>
                 <td style={{ padding: "4px" }}>
                   <button onClick={() => setState((p) => ({ ...p, laborRoles: p.laborRoles.filter((_, j) => j !== i) }))}
-                    style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"\u2715"}</button>
+                    style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"✕"}</button>
                 </td>
               </tr>
             ))}
