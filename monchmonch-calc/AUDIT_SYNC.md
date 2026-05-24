@@ -96,6 +96,34 @@ The spreadsheet's CALC_PL Y1 column uses annual aggregate revenue ($299K for bar
 
 To eliminate this divergence in a future spreadsheet pass: replace CALC_PL!B15 (Bars Gross Revenue Y1) formula to pull `=SUM(CALC_MONTHLY!N30, CALC_MONTHLY!N36, CALC_MONTHLY!N42, CALC_MONTHLY!N48, CALC_MONTHLY!N54, CALC_MONTHLY!N60)` (channel revenue Y1 totals).
 
+## Spreadsheet → Live Calc bridge (`scripts/xlsx_to_scenario.py`)
+
+You can edit the spreadsheet's INPUTS tab to run scenarios, then push those values into the live calc via the existing "Load Scenario" feature.
+
+### Usage
+
+```bash
+# From this repo root:
+python3 scripts/xlsx_to_scenario.py "../../Monch Bars/matchbox7-pitch-site/monchmonch_model_v6.xlsx"
+
+# Outputs: monchmonch_model_v6.scenario.json (in spreadsheet's directory)
+# Or specify output path:
+python3 scripts/xlsx_to_scenario.py path/to/spreadsheet.xlsx /tmp/my_scenario.json
+```
+
+Then in the live calc (https://monchmonch-calc.vercel.app/):
+1. Click **Load Scenario**
+2. Pick the generated `.json` file
+3. All inputs update; P&L + cash flow + cumulative breakeven recompute
+
+### Round-trip accuracy
+
+Spreadsheet → JSON → calc reproduces native calc values within ~2% rounding tolerance (floating-point precision across the xlsx → Python → JSON → JS path). For high-stakes investor scenarios, treat the live calc as the canonical output; the converter is a workflow accelerator, not a replacement for editing constants.js directly when material changes ship.
+
+### Cell map vs converter
+
+The cell map in this doc and the cell reads in `scripts/xlsx_to_scenario.py` must stay in sync. When you update one, update the other.
+
 ## Inviting external re-audit
 
 If Ben (or another auditor) wants to do a fresh pass:
