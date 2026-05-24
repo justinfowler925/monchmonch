@@ -84,7 +84,7 @@ export default function LaunchTab({ state, setState }) {
                       style={{ ...inputStyle, width: 120, textAlign: "left", color: C.textMuted }} />
                   </td>
                   <td style={{ padding: "4px" }}>
-                    <button onClick={() => removeExpense(i)} style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>\u2715</button>
+                    <button onClick={() => removeExpense(i)} style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>×</button>
                   </td>
                 </tr>
               ))}
@@ -132,7 +132,7 @@ export default function LaunchTab({ state, setState }) {
                     </select>
                   </td>
                   <td style={{ padding: "4px" }}>
-                    <button onClick={() => removeFunding(i)} style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>\u2715</button>
+                    <button onClick={() => removeFunding(i)} style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>×</button>
                   </td>
                 </tr>
               ))}
@@ -174,7 +174,7 @@ export default function LaunchTab({ state, setState }) {
                     borderRadius: 4, display: "flex", alignItems: "center", paddingLeft: 6,
                   }}>
                     <span style={{ fontSize: 10, color: "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>
-                      {e.name} \u2014 {fmt(e.cost)}
+                      {e.name} — {fmt(e.cost)}
                     </span>
                   </div>
                 </div>

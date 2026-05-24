@@ -18,7 +18,7 @@ export default function PLTab({ state }) {
       </div>
 
       <div style={{ ...glassCard, marginBottom: 16 }}>
-        <h3 style={h3Style}>REVENUE vs EBITDA \u2014 5 YEAR</h3>
+        <h3 style={h3Style}>REVENUE vs EBITDA — 5 YEAR</h3>
         <PLChart years={yrs} />
       </div>
 
@@ -98,7 +98,7 @@ export default function PLTab({ state }) {
       </div>
 
       <div style={{ ...glassCard }}>
-        <h3 style={h3Style}>UNIT VOLUME \u2014 5 YEAR</h3>
+        <h3 style={h3Style}>UNIT VOLUME — 5 YEAR</h3>
         <div style={{ display: "flex", gap: 6, alignItems: "flex-end", height: 100 }}>
           {yrs.map((y) => {
             const maxU = Math.max(...yrs.map((yr) => yr.totalUnits));

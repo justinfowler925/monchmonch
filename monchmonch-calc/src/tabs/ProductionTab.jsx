@@ -121,7 +121,7 @@ export default function ProductionTab({ state, setState }) {
         <h3 style={h3Style}>YEAR 1 MONTHLY BASE DEMAND (before seasonality)</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           <div>
-            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\uD83C\uDF6B Bars</div>
+            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>🍫 Bars</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
               {state.barDemand.map((v, i) => (
                 <InputRow key={i} label={MONTHS[i]} value={v} prefix="" step={100}
@@ -130,7 +130,7 @@ export default function ProductionTab({ state, setState }) {
             </div>
           </div>
           <div>
-            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\u26A1 Electrolytes</div>
+            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>⚡ Electrolytes</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 12px" }}>
               {state.elecDemand.map((v, i) => (
                 <InputRow key={i} label={MONTHS[i]} value={v} prefix="" step={100}
@@ -157,7 +157,7 @@ export default function ProductionTab({ state, setState }) {
         })()}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           <div>
-            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\uD83C\uDF6B Bars (avg: {(state.barSeason.reduce((a, b) => a + b, 0) / 12).toFixed(2)})</div>
+            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>🍫 Bars (avg: {(state.barSeason.reduce((a, b) => a + b, 0) / 12).toFixed(2)})</div>
             {state.barSeason.map((v, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
                 <span style={{ ...labelStyle, width: 32 }}>{MONTHS[i]}</span>
@@ -169,7 +169,7 @@ export default function ProductionTab({ state, setState }) {
             ))}
           </div>
           <div>
-            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\u26A1 Electrolytes (avg: {(state.elecSeason.reduce((a, b) => a + b, 0) / 12).toFixed(2)})</div>
+            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>⚡ Electrolytes (avg: {(state.elecSeason.reduce((a, b) => a + b, 0) / 12).toFixed(2)})</div>
             {state.elecSeason.map((v, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
                 <span style={{ ...labelStyle, width: 32 }}>{MONTHS[i]}</span>
@@ -184,7 +184,7 @@ export default function ProductionTab({ state, setState }) {
       </div>
 
       <div style={{ ...glassCard, marginTop: 16 }}>
-        <h3 style={h3Style}>Y1 PRODUCTION SCHEDULE \u2014 BARS</h3>
+        <h3 style={h3Style}>Y1 PRODUCTION SCHEDULE — BARS</h3>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
             <thead>
@@ -213,7 +213,7 @@ export default function ProductionTab({ state, setState }) {
                         background: belowMOQ ? C.redGlow : "transparent",
                       }}>
                         {fmtN(val)}
-                        {belowMOQ && <span style={{ color: C.red, fontSize: 9 }}> \u26A0</span>}
+                        {belowMOQ && <span style={{ color: C.red, fontSize: 9 }}> ⚠</span>}
                       </td>
                     );
                   })}
@@ -225,7 +225,7 @@ export default function ProductionTab({ state, setState }) {
       </div>
 
       <div style={{ ...glassCard, marginTop: 16 }}>
-        <h3 style={h3Style}>Y1 PRODUCTION SCHEDULE \u2014 ELECTROLYTES</h3>
+        <h3 style={h3Style}>Y1 PRODUCTION SCHEDULE — ELECTROLYTES</h3>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
             <thead>
@@ -254,7 +254,7 @@ export default function ProductionTab({ state, setState }) {
                         background: belowMOQ ? C.redGlow : "transparent",
                       }}>
                         {fmtN(val)}
-                        {belowMOQ && <span style={{ color: C.red, fontSize: 9 }}> \u26A0</span>}
+                        {belowMOQ && <span style={{ color: C.red, fontSize: 9 }}> ⚠</span>}
                       </td>
                     );
                   })}
@@ -322,7 +322,7 @@ export default function ProductionTab({ state, setState }) {
               }}>
                 <div style={{ fontSize: 11, color: stage.color, fontWeight: 700 }}>{stage.label}</div>
                 <div style={{ fontSize: 9, color: C.textDim }}>{stage.sub}</div>
-                {i < 3 && <div style={{ position: "absolute", right: -8, fontSize: 14, color: C.textDim }}>\u2192</div>}
+                {i < 3 && <div style={{ position: "absolute", right: -8, fontSize: 14, color: C.textDim }}>→</div>}
               </div>
             ))}
           </div>

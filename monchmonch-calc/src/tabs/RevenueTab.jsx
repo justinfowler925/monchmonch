@@ -43,7 +43,7 @@ export default function RevenueTab({ state, setState }) {
         </div>
         {totalAlloc > 0 && Math.abs(totalAlloc - 1) > 0.01 && (
           <div style={{ padding: "8px 12px", borderRadius: 6, background: C.amberGlow, border: `1px solid ${C.amber}30`, marginBottom: 12, fontSize: 11, color: C.amber }}>
-            Active channel allocations sum to {(totalAlloc * 100).toFixed(0)}% \u2014 should be 100%. Model normalizes automatically.
+            Active channel allocations sum to {(totalAlloc * 100).toFixed(0)}% — should be 100%. Model normalizes automatically.
           </div>
         )}
         <div style={{ overflowX: "auto" }}>
@@ -169,12 +169,12 @@ export default function RevenueTab({ state, setState }) {
         <div style={glassCard}>
           <h3 style={h3Style}>SKU PRICING (MSRP Reference)</h3>
           <div style={{ marginBottom: 14 }}>
-            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\uD83C\uDF6B Bars</div>
+            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>🍫 Bars</div>
             <InputRow label="DTC MSRP" value={state.barMSRP} onChange={(v) => setState((p) => ({ ...p, barMSRP: v }))} />
             <InputRow label="Trade / Wholesale" value={state.barTrade} onChange={(v) => setState((p) => ({ ...p, barTrade: v }))} />
           </div>
           <div>
-            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>\u26A1 Electrolytes</div>
+            <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>⚡ Electrolytes</div>
             <InputRow label="DTC MSRP" value={state.elecMSRP} onChange={(v) => setState((p) => ({ ...p, elecMSRP: v }))} />
             <InputRow label="Trade / Wholesale" value={state.elecTrade} onChange={(v) => setState((p) => ({ ...p, elecTrade: v }))} />
           </div>

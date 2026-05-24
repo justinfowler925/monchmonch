@@ -145,17 +145,17 @@ export default function UnitEconTab({ state, setState }) {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div style={glassCard}>
-          <h3 style={h3Style}>\uD83C\uDF6B BAR RAW MATERIALS</h3>
+          <h3 style={h3Style}>🍫 BAR RAW MATERIALS</h3>
           {renderRMTable(state.barRM, "bar", [model.barRMT1, model.barRMT2, model.barRMT3])}
         </div>
         <div style={glassCard}>
-          <h3 style={h3Style}>\u26A1 ELECTROLYTE RAW MATERIALS</h3>
+          <h3 style={h3Style}>⚡ ELECTROLYTE RAW MATERIALS</h3>
           {renderRMTable(state.elecRM, "elec", [model.elecRMT1, model.elecRMT2, model.elecRMT3])}
         </div>
       </div>
 
       <div style={{ ...glassCard, marginTop: 16 }}>
-        <h3 style={h3Style}>\uD83D\uDCE6 PACKAGING COSTS</h3>
+        <h3 style={h3Style}>📦 PACKAGING COSTS</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           {[{ label: "\uD83C\uDF6B Bars", type: "bar", data: state.barPackaging, moqTotal: model.barPkgMoqCost, perUnit: model.barPkgPerUnit },
             { label: "\u26A1 Electrolytes", type: "elec", data: state.elecPackaging, moqTotal: model.elecPkgMoqCost, perUnit: model.elecPkgPerUnit }].map((grp) => (

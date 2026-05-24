@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import * as XLSX from "xlsx";
 import { C, DEFAULT } from "./constants.js";
+import { parseSpreadsheetToState } from "./xlsxImport.js";
 import LaunchTab from "./tabs/LaunchTab.jsx";
 import UnitEconTab from "./tabs/UnitEconTab.jsx";
 import RevenueTab from "./tabs/RevenueTab.jsx";
@@ -59,6 +61,8 @@ export default function MonchMonchCalculator() {
   ];
 
   const fileRef = useRef(null);
+  const xlsxRef = useRef(null);
+  const [xlsxStatus, setXlsxStatus] = useState(null); // {ok: bool, msg: string} | null
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -106,6 +110,34 @@ export default function MonchMonchCalculator() {
     e.target.value = "";
   };
 
+  const importSpreadsheet = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setXlsxStatus(null);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const wb = XLSX.read(new Uint8Array(ev.target.result), { type: "array" });
+        const loaded = parseSpreadsheetToState(wb);
+        const next = { ...DEFAULT, ...loaded };
+        setState(next);
+        const savedAt = Date.now();
+        writeWorkspace({ v: 1, state: next, tab, savedAt });
+        setAutosaveAt(savedAt);
+        const ingredientCount = loaded.barRM?.filter(m => m.qty > 0).length ?? 0;
+        setXlsxStatus({
+          ok: true,
+          msg: `Loaded "${file.name}" — ${loaded.channels?.length ?? 0} channels, ${ingredientCount} bar ingredients, $${(loaded.equityRaised || 0).toLocaleString()} raise`,
+        });
+        window.setTimeout(() => setXlsxStatus(null), 8000);
+      } catch (err) {
+        setXlsxStatus({ ok: false, msg: `Import failed: ${err.message}. File must be monchmonch_model_vN.xlsx (Ben's INPUTS schema).` });
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = "";
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -128,13 +160,25 @@ export default function MonchMonchCalculator() {
               MonchMonch Financial Model
             </h1>
             <p style={{ color: C.textMuted, fontSize: 13, margin: "4px 0 0", fontWeight: 500 }}>
-              Interactive Operations & Revenue Calculator — v5.0 (bars + ingredient licensing)
+              Interactive Operations & Revenue Calculator — v6.0 (bars + ingredient licensing + working-capital cash flow)
             </p>
             <p style={{ color: C.textDim, fontSize: 11, margin: "6px 0 0", fontWeight: 500 }}>
               {autosaveAt
                 ? `Autosaved in this browser — ${new Date(autosaveAt).toLocaleString()}`
                 : "Edits autosave in this browser (localStorage). Reset clears the saved workspace."}
             </p>
+            {xlsxStatus && (
+              <p style={{
+                color: xlsxStatus.ok ? C.green : C.red,
+                fontSize: 11, margin: "8px 0 0", fontWeight: 600,
+                padding: "6px 10px", borderRadius: 6,
+                background: xlsxStatus.ok ? C.greenGlow : C.redGlow,
+                border: `1px solid ${xlsxStatus.ok ? C.green : C.red}40`,
+                display: "inline-block",
+              }}>
+                {xlsxStatus.ok ? "✓" : "⚠"} {xlsxStatus.msg}
+              </p>
+            )}
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <button onClick={exportScenario} style={{
@@ -146,8 +190,14 @@ export default function MonchMonchCalculator() {
               padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.green}40`,
               background: C.greenGlow, color: C.green, fontSize: 12, fontWeight: 600,
               cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
-            }}>Load Scenario</button>
+            }}>Load Scenario (JSON)</button>
             <input ref={fileRef} type="file" accept=".json" onChange={importScenario} style={{ display: "none" }} />
+            <button onClick={() => xlsxRef.current?.click()} style={{
+              padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.cyan}40`,
+              background: `${C.cyan}1A`, color: C.cyan, fontSize: 12, fontWeight: 600,
+              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
+            }}>Import from Excel</button>
+            <input ref={xlsxRef} type="file" accept=".xlsx" onChange={importSpreadsheet} style={{ display: "none" }} />
             <button onClick={reset} style={{
               padding: "8px 18px", borderRadius: 8, border: `1px solid ${C.border}`,
               background: "transparent", color: C.textMuted, fontSize: 12, fontWeight: 600,
@@ -189,7 +239,7 @@ export default function MonchMonchCalculator() {
 
       <div style={{ textAlign: "center", padding: "20px 32px 0", borderTop: `1px solid ${C.border}` }}>
         <span style={{ fontSize: 11, color: C.textDim }}>
-          MonchMonch Financial Model Calculator — KH Framework v5.0 — All calculations run client-side
+          MonchMonch Financial Model v6.0 — runs client-side — import scenarios from Ben's auditable spreadsheet or save your own as JSON
         </span>
       </div>
     </div>
