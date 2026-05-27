@@ -35,7 +35,7 @@ export default function UnitEconTab({ state, setState }) {
               <td style={{ textAlign: "right", padding: "6px" }}>
                 <input type="number" value={m.t1} step={0.01} min={0}
                   onChange={(e) => updateRM(type, i, "t1", parseFloat(e.target.value) || 0)}
-                  style={{ ...inputStyle, width: 60, fontSize: 12 }} />
+                  style={{ ...inputStyle, width: 70, fontSize: 12 }} />
               </td>
               <td style={{ textAlign: "right", padding: "6px" }}>
                 <input type="number" value={m.moq} step={10} min={0}
@@ -53,11 +53,10 @@ export default function UnitEconTab({ state, setState }) {
         </tbody>
         <tfoot>
           <tr style={{ borderTop: `2px solid ${C.purple}44` }}>
-            <td colSpan={3} style={{ padding: "8px 6px", color: C.text, fontWeight: 700, whiteSpace: "nowrap" }}>TOTAL RM COST / UNIT</td>
+            <td colSpan={4} style={{ padding: "8px 6px", color: C.text, fontWeight: 700, whiteSpace: "nowrap" }}>TOTAL RM COST / UNIT</td>
             <td style={{ textAlign: "right", padding: "8px 6px", color: C.cyan, fontWeight: 700, fontSize: 12, whiteSpace: "nowrap" }}>
               {fmt(materials.reduce((s, m) => s + m.moq * m.t1, 0))}
             </td>
-            <td />
             <td style={{ textAlign: "right", padding: "8px 6px", color: C.purple, fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
               {fmt(rmTotal, 4)}
             </td>
@@ -142,22 +141,23 @@ export default function UnitEconTab({ state, setState }) {
             { label: "⚡ Electrolytes", type: "elec", data: state.elecPackaging, moqTotal: model.elecPkgMoqCost, perUnit: model.elecPkgPerUnit }].map((grp) => (
             <div key={grp.type}>
               <div style={{ color: C.text, fontWeight: 600, fontSize: 13, marginBottom: 8 }}>{grp.label}</div>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", minWidth: 380, borderCollapse: "collapse", fontSize: 12 }}>
                 <thead>
                   <tr>
                     {["Item", "$/Unit", "MOQ", "Lead (wk)", "MOQ $"].map((h) => (
-                      <th key={h} style={{ ...labelStyle, padding: "6px 4px", textAlign: h === "Item" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
+                      <th key={h} style={{ ...labelStyle, padding: "6px 4px", whiteSpace: "nowrap", textAlign: h === "Item" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {grp.data.map((p, i) => (
                     <tr key={i} style={{ borderBottom: `1px solid ${C.border}22` }}>
-                      <td style={{ padding: "4px", color: C.text }}>{p.name}</td>
+                      <td style={{ padding: "4px", color: C.text, whiteSpace: "nowrap" }}>{p.name}</td>
                       <td style={{ textAlign: "right", padding: "4px" }}>
                         <input type="number" value={p.costPerUnit} step={0.005} min={0}
                           onChange={(e) => updatePkg(grp.type, i, "costPerUnit", parseFloat(e.target.value) || 0)}
-                          style={{ ...inputStyle, width: 60, fontSize: 11 }} />
+                          style={{ ...inputStyle, width: 70, fontSize: 11 }} />
                       </td>
                       <td style={{ textAlign: "right", padding: "4px" }}>
                         <input type="number" value={p.moq} step={1000} min={0}
@@ -182,6 +182,7 @@ export default function UnitEconTab({ state, setState }) {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </div>
           ))}
         </div>
@@ -248,7 +249,7 @@ export default function UnitEconTab({ state, setState }) {
           <thead>
             <tr>
               {["Role", "Headcount", "$/hr", "Hrs/Run", "Variable?", "Cost/Run", ""].map((h) => (
-                <th key={h} style={{ ...labelStyle, padding: "6px 4px", textAlign: h === "Role" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
+                <th key={h} style={{ ...labelStyle, padding: "6px 4px", whiteSpace: "nowrap", textAlign: h === "Role" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -257,7 +258,7 @@ export default function UnitEconTab({ state, setState }) {
               <tr key={i} style={{ borderBottom: `1px solid ${C.border}22` }}>
                 <td style={{ padding: "4px" }}>
                   <input value={r.role} onChange={(e) => setState((p) => { const a = [...p.laborRoles]; a[i] = { ...a[i], role: e.target.value }; return { ...p, laborRoles: a }; })}
-                    style={{ ...inputStyle, width: 140, textAlign: "left", color: C.text }} />
+                    style={{ ...inputStyle, width: "100%", minWidth: 120, textAlign: "left", color: C.text, boxSizing: "border-box" }} />
                 </td>
                 <td style={{ textAlign: "right", padding: "4px" }}>
                   <input type="number" value={r.headcount} step={1} min={0}
@@ -279,10 +280,10 @@ export default function UnitEconTab({ state, setState }) {
                     onChange={(e) => setState((p) => { const a = [...p.laborRoles]; a[i] = { ...a[i], isVariable: e.target.checked }; return { ...p, laborRoles: a }; })}
                     style={{ accentColor: C.green }} />
                 </td>
-                <td style={{ textAlign: "right", padding: "4px", color: C.violet, fontWeight: 700 }}>
+                <td style={{ textAlign: "right", padding: "4px", color: C.violet, fontWeight: 700, whiteSpace: "nowrap" }}>
                   {fmt(r.headcount * r.rate * r.hoursPerRun)}
                 </td>
-                <td style={{ padding: "4px" }}>
+                <td style={{ padding: "4px", textAlign: "center" }}>
                   <button onClick={() => setState((p) => ({ ...p, laborRoles: p.laborRoles.filter((_, j) => j !== i) }))}
                     style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 14 }}>{"✕"}</button>
                 </td>
@@ -291,10 +292,11 @@ export default function UnitEconTab({ state, setState }) {
           </tbody>
           <tfoot>
             <tr style={{ borderTop: `2px solid ${C.violet}44` }}>
-              <td colSpan={6} style={{ padding: "8px 4px", color: C.text, fontWeight: 700 }}>TOTAL LABOR / RUN</td>
-              <td style={{ textAlign: "right", padding: "8px 4px", color: C.violet, fontWeight: 800 }}>
+              <td colSpan={5} style={{ padding: "8px 4px", color: C.text, fontWeight: 700, whiteSpace: "nowrap" }}>TOTAL LABOR / RUN</td>
+              <td style={{ textAlign: "right", padding: "8px 4px", color: C.violet, fontWeight: 800, whiteSpace: "nowrap" }}>
                 {fmt(state.laborRoles.reduce((s, r) => s + r.headcount * r.rate * r.hoursPerRun, 0))}
               </td>
+              <td />
             </tr>
           </tfoot>
         </table>
