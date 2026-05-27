@@ -2,8 +2,8 @@ export function runModel(s) {
   const rmCost = (materials, tier) =>
     materials.reduce((sum, m) => sum + m.qty * m[`t${tier}`], 0);
 
-  const barRMT1 = rmCost(s.barRM, 1), barRMT2 = rmCost(s.barRM, 2), barRMT3 = rmCost(s.barRM, 3);
-  const elecRMT1 = rmCost(s.elecRM, 1), elecRMT2 = rmCost(s.elecRM, 2), elecRMT3 = rmCost(s.elecRM, 3);
+  const barRMT1 = rmCost(s.barRM, 1);
+  const elecRMT1 = rmCost(s.elecRM, 1);
 
   const barPkgPerUnit = s.barPackaging.reduce((sum, p) => sum + p.costPerUnit, 0);
   const elecPkgPerUnit = s.elecPackaging.reduce((sum, p) => sum + p.costPerUnit, 0);
@@ -35,13 +35,12 @@ export function runModel(s) {
   // Per-unit COGS is now RM + labor + co-man + packaging. Overhead lives in OpEx where it belongs.
 
   const cogsWaterfall = (coManPrices, type) => {
+    const rm = type === "bar" ? barRMT1 : elecRMT1;
     return s.coManLabels.map((label, i) => {
-      const rm = type === "bar" ? [barRMT1, barRMT2, barRMT3] : [elecRMT1, elecRMT2, elecRMT3];
-      const rmTier = i < 2 ? rm[0] : i < 4 ? rm[1] : rm[2];
       const labor = laborAtTier(i);
       const coMan = coManPrices[i];
       const pkg = type === "bar" ? barPkgPerUnit : elecPkgPerUnit;
-      return { tier: label, rm: rmTier, labor, overhead: 0, coMan, packaging: pkg, total: rmTier + labor + coMan + pkg };
+      return { tier: label, rm, labor, overhead: 0, coMan, packaging: pkg, total: rm + labor + coMan + pkg };
     });
   };
 
@@ -298,7 +297,7 @@ export function runModel(s) {
 
   return {
     barCOGS, elecCOGS, monthly, years,
-    barRMT1, barRMT2, barRMT3, elecRMT1, elecRMT2, elecRMT3,
+    barRMT1, elecRMT1,
     barPkgPerUnit, elecPkgPerUnit,
     opTier, y1BarUnits, y1ElecUnits, y1TotalUnits,
     startupCapex, commitmentMonthly, debtMonthlyPayment,

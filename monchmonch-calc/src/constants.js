@@ -44,32 +44,32 @@ export const DEFAULT = {
   // Ingredient prices per food-grade specialty supplier benchmarks (May 2026).
   // Total RM at T1 ~$0.81/bar; T3 ~$0.61/bar.
   barRM: [
-    { name: "Flavoring Orig", qty: 0.001, t1: 4, t2: 3.5, t3: 3, moq: 25 },           // 0.45g (reduced from 0.01 = 4.5g, unrealistic for flavoring)
-    { name: "Flavoring Berry", qty: 0.0011, t1: 5, t2: 4.33, t3: 3.75, moq: 25 },      // 0.5g (reduced from 0.012, same reason)
-    { name: "Wrapper", qty: 1, t1: 0.08, t2: 0.061, t3: 0.05, moq: 5000 },             // 1 each (packaging, not bar weight)
-    { name: "Outer Box", qty: 0.083, t1: 0.36, t2: 0.3, t3: 0.24, moq: 1000 },         // 1/12 case allocation per bar
-    { name: "Whey Protein", qty: 0.022, t1: 10, t2: 9, t3: 8, moq: 200 },              // 10g WPI → ~9g protein (was 0.044, gave 18g)
-    { name: "Milk Protein Isolate", qty: 0.011, t1: 10, t2: 9, t3: 8, moq: 200 },      // 5g MPI → ~4g protein (was 0, now populated)
-    { name: "Tapioca Fiber", qty: 0.011, t1: 3.5, t2: 3.0, t3: 2.5, moq: 100 },        // 5g soluble fiber binder
-    { name: "IMO", qty: 0.011, t1: 5.0, t2: 4.5, t3: 4.0, moq: 100 },                  // 5g sweetener-fiber
-    { name: "Vegetable Glycerin", qty: 0.009, t1: 2.5, t2: 2.25, t3: 2.0, moq: 50 },   // 4g humectant (keeps bar soft)
-    { name: "Cocoa Butter", qty: 0.009, t1: 10, t2: 9, t3: 8, moq: 100 },              // 4g chocolate-compound coating
-    { name: "Sunflower Lecithin", qty: 0.0007, t1: 6, t2: 5.5, t3: 5, moq: 25 },       // 0.3g emulsifier
-    { name: "Stevia Reb M", qty: 0.0007, t1: 2.4, t2: 2, t3: 1.6, moq: 100 },          // 0.3g high-intensity sweetener (was 0.025 = 11g, absurd)
-    { name: "Salt", qty: 0.0007, t1: 0.5, t2: 0.4, t3: 0.33, moq: 50 },                // 0.3g flavor balance
-    { name: "Cocoa Soy Crisp", qty: 0.013, t1: 4, t2: 3.5, t3: 3, moq: 100 },          // 6g crunch component
-    { name: "Monch Fiber", qty: 0.020, t1: 5, t2: 4, t3: 3.25, moq: 100 },             // 9g proprietary Monch fiber — THE brand differentiator (pitch claims 8-10g/bar)
+    { name: "Flavoring Orig", qty: 0.001, t1: 4, moq: 25 },
+    { name: "Flavoring Berry", qty: 0.0011, t1: 5, moq: 25 },
+    { name: "Wrapper", qty: 1, t1: 0.08, moq: 5000 },
+    { name: "Outer Box", qty: 0.083, t1: 0.36, moq: 1000 },
+    { name: "Whey Protein", qty: 0.022, t1: 10, moq: 200 },
+    { name: "Milk Protein Isolate", qty: 0.011, t1: 10, moq: 200 },
+    { name: "Tapioca Fiber", qty: 0.011, t1: 3.5, moq: 100 },
+    { name: "IMO", qty: 0.011, t1: 5.0, moq: 100 },
+    { name: "Vegetable Glycerin", qty: 0.009, t1: 2.5, moq: 50 },
+    { name: "Cocoa Butter", qty: 0.009, t1: 10, moq: 100 },
+    { name: "Sunflower Lecithin", qty: 0.0007, t1: 6, moq: 25 },
+    { name: "Stevia Reb M", qty: 0.0007, t1: 2.4, moq: 100 },
+    { name: "Salt", qty: 0.0007, t1: 0.5, moq: 50 },
+    { name: "Cocoa Soy Crisp", qty: 0.013, t1: 4, moq: 100 },
+    { name: "Monch Fiber", qty: 0.020, t1: 5, moq: 100 },
   ],
   elecRM: [
-    { name: "Ascorbic Acid", qty: 0.015, t1: 6.67, t2: 5.5, t3: 4.5, moq: 50 },
-    { name: "Monch Fiber", qty: 0.008, t1: 5, t2: 4, t3: 3.25, moq: 100 },
-    { name: "Citric Acid", qty: 0.005, t1: 6, t2: 5, t3: 4, moq: 50 },
-    { name: "Salt", qty: 0.003, t1: 0.5, t2: 0.4, t3: 0.33, moq: 50 },
-    { name: "Potassium Cl", qty: 0.005, t1: 4, t2: 3.5, t3: 3, moq: 50 },
-    { name: "Magnesium Malate", qty: 0.008, t1: 5, t2: 4.25, t3: 3.5, moq: 25 },
-    { name: "Purified Stevia", qty: 0.003, t1: 1.33, t2: 1, t3: 0.83, moq: 50 },
-    { name: "Flavoring", qty: 0.01, t1: 4, t2: 3.5, t3: 3, moq: 25 },
-    { name: "Sachet Pkg", qty: 1, t1: 0.05, t2: 0.04, t3: 0.03, moq: 10000 },
+    { name: "Ascorbic Acid", qty: 0.015, t1: 6.67, moq: 50 },
+    { name: "Monch Fiber", qty: 0.008, t1: 5, moq: 100 },
+    { name: "Citric Acid", qty: 0.005, t1: 6, moq: 50 },
+    { name: "Salt", qty: 0.003, t1: 0.5, moq: 50 },
+    { name: "Potassium Cl", qty: 0.005, t1: 4, moq: 50 },
+    { name: "Magnesium Malate", qty: 0.008, t1: 5, moq: 25 },
+    { name: "Purified Stevia", qty: 0.003, t1: 1.33, moq: 50 },
+    { name: "Flavoring", qty: 0.01, t1: 4, moq: 25 },
+    { name: "Sachet Pkg", qty: 1, t1: 0.05, moq: 10000 },
   ],
 
   coManBars: [1.35, 1.20, 1.10, 1.00, 0.92, 0.85, 0.80],

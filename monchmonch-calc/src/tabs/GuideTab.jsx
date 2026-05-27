@@ -134,10 +134,10 @@ const sections = [
         type: "list",
         items: [
           "Qty/Unit — how many pounds of this material go into one finished unit",
-          "$/lb T1, T2, T3 — the per-pound cost at three volume tiers (T1 = small orders, T3 = bulk). Use the tier buttons above the table to toggle which pricing tier is used in the Cost/Unit calculation",
+          "$/lb — the per-pound cost for this material",
           "MOQ (lbs) — the minimum order quantity from the supplier in pounds. This is the smallest amount you can buy",
-          "MOQ $ — automatically calculated: MOQ × T1 price. Shows the minimum dollar commitment for each material",
-          "Cost/Unit — automatically calculated: Qty × $/lb at the selected tier. This is what each material contributes to your per-unit COGS",
+          "MOQ $ — automatically calculated: MOQ × $/lb. Shows the minimum dollar commitment for each material",
+          "Cost/Unit — automatically calculated: Qty × $/lb. This is what each material contributes to your per-unit COGS",
         ],
       },
       {
@@ -576,11 +576,6 @@ const sections = [
         type: "term",
         term: "Slotting Fee",
         def: "A one-time fee paid to a retailer for shelf space. Common in big box retail; can range from $25K to $100K per SKU per chain.",
-      },
-      {
-        type: "term",
-        term: "Tier (T1/T2/T3)",
-        def: "Volume-based pricing levels for raw materials. T1 = smallest order (most expensive per unit), T3 = bulk order (cheapest).",
       },
       {
         type: "term",
