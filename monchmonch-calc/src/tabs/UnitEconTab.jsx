@@ -15,37 +15,37 @@ export default function UnitEconTab({ state, setState }) {
   };
   const renderRMTable = (materials, type, rmTotal) => (
     <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+      <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse", fontSize: 12 }}>
         <thead>
           <tr>
             {["Material", "Qty/Unit", "$/lb", "MOQ (lbs)", "MOQ $", "Cost/Unit"].map((h) => (
-              <th key={h} style={{ ...labelStyle, padding: "8px 4px", textAlign: h === "Material" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
+              <th key={h} style={{ ...labelStyle, padding: "8px 6px", whiteSpace: "nowrap", textAlign: h === "Material" ? "left" : "right", borderBottom: `1px solid ${C.border}` }}>{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {materials.map((m, i) => (
             <tr key={i} style={{ borderBottom: `1px solid ${C.border}22` }}>
-              <td style={{ padding: "6px", color: C.text, fontWeight: 500 }}>{m.name}</td>
+              <td style={{ padding: "6px", color: C.text, fontWeight: 500, whiteSpace: "nowrap" }}>{m.name}</td>
               <td style={{ textAlign: "right", padding: "6px" }}>
                 <input type="number" value={m.qty} step={0.001} min={0}
                   onChange={(e) => updateRM(type, i, "qty", parseFloat(e.target.value) || 0)}
-                  style={{ ...inputStyle, width: 60, fontSize: 12 }} />
+                  style={{ ...inputStyle, width: 70, fontSize: 12 }} />
               </td>
               <td style={{ textAlign: "right", padding: "6px" }}>
                 <input type="number" value={m.t1} step={0.01} min={0}
                   onChange={(e) => updateRM(type, i, "t1", parseFloat(e.target.value) || 0)}
-                  style={{ ...inputStyle, width: 55, fontSize: 12 }} />
+                  style={{ ...inputStyle, width: 60, fontSize: 12 }} />
               </td>
               <td style={{ textAlign: "right", padding: "6px" }}>
                 <input type="number" value={m.moq} step={10} min={0}
                   onChange={(e) => updateRM(type, i, "moq", parseFloat(e.target.value) || 0)}
-                  style={{ ...inputStyle, width: 60, fontSize: 12, color: C.cyan }} />
+                  style={{ ...inputStyle, width: 70, fontSize: 12, color: C.cyan }} />
               </td>
-              <td style={{ textAlign: "right", padding: "6px", color: C.cyan, fontWeight: 600, fontSize: 11 }}>
+              <td style={{ textAlign: "right", padding: "6px", color: C.cyan, fontWeight: 600, fontSize: 11, whiteSpace: "nowrap" }}>
                 {fmt(m.moq * m.t1, 0)}
               </td>
-              <td style={{ textAlign: "right", padding: "6px", color: C.amber, fontWeight: 700 }}>
+              <td style={{ textAlign: "right", padding: "6px", color: C.amber, fontWeight: 700, whiteSpace: "nowrap" }}>
                 {fmt(m.qty * m.t1, 4)}
               </td>
             </tr>
@@ -53,12 +53,12 @@ export default function UnitEconTab({ state, setState }) {
         </tbody>
         <tfoot>
           <tr style={{ borderTop: `2px solid ${C.purple}44` }}>
-            <td colSpan={3} style={{ padding: "8px 6px", color: C.text, fontWeight: 700 }}>TOTAL RM COST / UNIT</td>
-            <td style={{ textAlign: "right", padding: "8px 6px", color: C.cyan, fontWeight: 700, fontSize: 12 }}>
+            <td colSpan={3} style={{ padding: "8px 6px", color: C.text, fontWeight: 700, whiteSpace: "nowrap" }}>TOTAL RM COST / UNIT</td>
+            <td style={{ textAlign: "right", padding: "8px 6px", color: C.cyan, fontWeight: 700, fontSize: 12, whiteSpace: "nowrap" }}>
               {fmt(materials.reduce((s, m) => s + m.moq * m.t1, 0))}
             </td>
             <td />
-            <td style={{ textAlign: "right", padding: "8px 6px", color: C.purple, fontWeight: 800, fontSize: 14 }}>
+            <td style={{ textAlign: "right", padding: "8px 6px", color: C.purple, fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
               {fmt(rmTotal, 4)}
             </td>
           </tr>
@@ -124,7 +124,7 @@ export default function UnitEconTab({ state, setState }) {
         <MetricCard label="Elec COGS @ Operating" value={fmt(model.elecCOGS[model.opTier]?.total, 3)} sub={`incl. ${fmt(model.elecPkgPerUnit, 3)} pkg`} color={C.orange} icon="📦" />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div style={glassCard}>
           <h3 style={h3Style}>🍫 BAR RAW MATERIALS</h3>
           {renderRMTable(state.barRM, "bar", model.barRMT1)}
